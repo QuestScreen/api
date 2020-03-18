@@ -1,7 +1,7 @@
 # QuestScreen Plugin API
 
 This is the plugin API for QuestScreen.
-For documentation, please see the QuestScreen website.
+For documentation, please see the [QuestScreen website](https://questscreen.flyx.org).
 
 ## License
 
