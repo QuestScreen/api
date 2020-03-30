@@ -14,32 +14,32 @@ import (
 type ResourceCollectionIndex int
 
 // ModulePureEndpoint is an endpoint of a module for the HTTP server.
-// It takes PUT requests on the path specified by the ModuleDescriptor.
+// It takes POST requests on the path specified by the ModuleDescriptor.
 type ModulePureEndpoint interface {
-	// Put handles a PUT request. Two return values are expected:
+	// Post handles a POST request. Two return values are expected:
 	//
 	// The first return value will be serialized to JSON and sent back to the
 	// client. If it's nil, nothing will be sent and the client will get a
 	// 204 No Content.
 	//
 	// The second return value will be handed over to the module's InitTransition
-	// which will be called in the OpenGL thread after Put has returned.
+	// which will be called in the OpenGL thread after Post has returned.
 	// For thread safety, that value should be constructed from scratch and not be
 	// a pointer into the ModuleState object.
 	//
 	// If an error is returned, InitTransition will not be called and both return
 	// values will be ignored. The server will the respond according to the cause
 	// of the returned error.
-	Put(payload []byte) (interface{}, interface{}, SendableError)
+	Post(payload []byte) (interface{}, interface{}, SendableError)
 }
 
 // ModuleIDEndpoint is an endpoint of a module for the HTTP server.
-// It takes PUT requests on the path specified by the ModuleDescriptor, with an
+// It takes POST requests on the path specified by the ModuleDescriptor, with an
 // additional URL path item interpreted as ID.
 type ModuleIDEndpoint interface {
-	// Put works analoguous to ModulePureEndpoint.Put, but gets the id from the
+	// Post works analoguous to ModulePureEndpoint.Post, but gets the id from the
 	// request URL path as additional parameter.
-	Put(id string, payload []byte) (interface{}, interface{}, SendableError)
+	Post(id string, payload []byte) (interface{}, interface{}, SendableError)
 }
 
 // ModuleState describes the state of a module. It is written to and loaded
@@ -189,9 +189,8 @@ type Module struct {
 		ms MessageSender) (ModuleState, error)
 }
 
-// ModuleRenderer describes the rendere of a module. This object belongs with
-// the OpenGL thread.
-// All funcs are called in the OpenGL thread unless noted otherwise.
+// ModuleRenderer describes the renderer of a module.
+// This object belongs with the OpenGL thread.
 type ModuleRenderer interface {
 	// Descriptor shall return the Module this renderer belongs to.
 	Descriptor() *Module
