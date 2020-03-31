@@ -74,6 +74,14 @@ type RenderContext interface {
 	Font(fontFamily int, style FontStyle, size FontSize) *ttf.Font
 	// DefaultBorderWidth returns the default size (in pixels) of a border line.
 	DefaultBorderWidth() int32
+	// LoadTexture is a helper function that loads a grayscale texture image into
+	// an SDL texture which has its alpha channel set to the image's grayscale
+	// channel and the color channels set to the given color.
+	LoadTexture(textureIndex int, color RGBColor) (*sdl.Texture, error)
+	// TextToTexture renders the given text with the given font and the given
+	// color into a texture with transparent background.
+	// Returns nil if it wasn't able to create the texture.
+	TextToTexture(text string, font *ttf.Font, color sdl.Color) *sdl.Texture
 }
 
 // ExtendedRenderContext is the context used for rebuilding the whole module
@@ -82,10 +90,6 @@ type ExtendedRenderContext interface {
 	RenderContext
 	// Heroes returns a non-null list iff the module's description has UseHeroes set.
 	Heroes() HeroList
-	// LoadTexture is a helper function that loads a grayscale texture image into
-	// an SDL texture which has its alpha channel set to the image's grayscale
-	// channel and the color channels set to the given color.
-	LoadTexture(textureIndex int, color RGBColor) (*sdl.Texture, error)
 }
 
 // ResourceNames generates a list of resource names from a list of resources.
