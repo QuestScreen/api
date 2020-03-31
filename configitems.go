@@ -121,6 +121,11 @@ func (c *RGBColor) Use(renderer *sdl.Renderer) error {
 	return renderer.SetDrawColor(c.Red, c.Green, c.Blue, 255)
 }
 
+// WithAlpha generates an sdl.Color with the given alpha value.
+func (c *RGBColor) WithAlpha(alpha uint8) sdl.Color {
+	return sdl.Color{R: c.Red, G: c.Green, B: c.Blue, A: alpha}
+}
+
 // UnmarshalJSON loads a JSON string as HTML hexcode into RGBColor
 func (c *RGBColor) UnmarshalJSON(data []byte) error {
 	var s string
