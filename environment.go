@@ -66,6 +66,42 @@ type ServerContext interface {
 	HeroID(index int) string
 }
 
+// Canvas is a facility to render content into a rectangular canvas.
+// use it to pre-render content into a texture you can later copy to the
+// renderer when rendering a scene.
+//
+// Creation of a Canvas sets the target of the underlying sdl.Renderer to the
+// texture this Canvas draws on. Ensure that you either Close or Finish a
+// Canvas object after creating it to reset the renderer's target.
+//
+// To draw into the canvas, use the normal renderer.
+type Canvas interface {
+	// Finish resets the target of the underlying renderer and returns the
+	// rendered picture as texture.
+	Finish() *sdl.Texture
+	// Close resets the target of the underlying renderer.
+	// It is idempotent and does nothing if Finish() was called before.
+	Close()
+}
+
+// Directions is a bitset of directions.
+type Directions uint8
+
+const (
+	// Nowhere contains no direction at all.
+	Nowhere Directions = 0
+	// North is the northern direction
+	North Directions = 1 << iota
+	// East is the eastern direction
+	East
+	// South is the southern direction
+	South
+	// West is the western direction
+	West
+	// Everywhere contains all directions.
+	Everywhere = North | East | South | West
+)
+
 // RenderContext is the context given to all rendering funcs of a module
 type RenderContext interface {
 	ResourceProvider
@@ -82,6 +118,13 @@ type RenderContext interface {
 	// color into a texture with transparent background.
 	// Returns nil if it wasn't able to create the texture.
 	TextToTexture(text string, font *ttf.Font, color sdl.Color) *sdl.Texture
+	// CreateCanvas creates a canvas to draw content into, and optionally fills it
+	// with background color and/or with a repeating tile texture.
+	//
+	// Borders are added in each given direction. Border width/height is added to
+	// the given innerWidth / innerHeight values.
+	CreateCanvas(innerWidth, innerHeight int32, background *sdl.Color,
+		tile *sdl.Texture, borders Directions) Canvas
 }
 
 // ExtendedRenderContext is the context used for rebuilding the whole module
