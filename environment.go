@@ -108,8 +108,14 @@ type RenderContext interface {
 	Renderer() *sdl.Renderer
 	// Font returns the font face of the selected font.
 	Font(fontFamily int, style FontStyle, size FontSize) *ttf.Font
-	// DefaultBorderWidth returns the default size (in pixels) of a border line.
-	DefaultBorderWidth() int32
+	// Unit is the scaled smallest unit in pixels. It is defined as being
+	// 1/144 of the screen's width or height, whichever is smaller.
+	// Borders typically have the size of one Unit.
+	//
+	// Use this value as base for calculating sizes to make your renderer output
+	// scale depending on the target display size. Not using lengths smaller than
+	// Unit avoids making stuff too small for your users to see.
+	Unit() int32
 	// LoadTexture is a helper function that loads a grayscale texture image into
 	// an SDL texture which has its alpha channel set to the image's grayscale
 	// channel and the color channels set to the given color.
