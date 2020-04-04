@@ -116,10 +116,13 @@ type RenderContext interface {
 	// scale depending on the target display size. Not using lengths smaller than
 	// Unit avoids making stuff too small for your users to see.
 	Unit() int32
-	// LoadTexture is a helper function that loads a grayscale texture image into
+	// UpdateMask is a helper function that loads a selected grayscale image into
 	// an SDL texture which has its alpha channel set to the image's grayscale
 	// channel and the color channels set to the given color.
-	LoadTexture(textureIndex int, color RGBColor) (*sdl.Texture, error)
+	//
+	// If *target previously pointed to a texture, that texture is destroyed.
+	// If not mask texture is selected, *target will be set to `nil`.
+	UpdateMask(target **sdl.Texture, bg SelectableTexturedBackground)
 	// TextToTexture renders the given text with the given font and the given
 	// color into a texture with transparent background.
 	// Returns nil if it wasn't able to create the texture.
