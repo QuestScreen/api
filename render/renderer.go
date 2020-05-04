@@ -4,14 +4,14 @@ package render
 // `id` is the name of an OpenGL texture iff width!=0.
 // any Image width width==0 is considered the empty image.
 type Image struct {
-	id            uint32
-	width, height int32
+	TextureID     uint32
+	Width, Height int32
 }
 
 // IsEmpty tests whether the image is empty
 // (i.e. does not link to an OpenGL texture)
 func (i *Image) IsEmpty() bool {
-	return i.width == 0
+	return i.Width == 0
 }
 
 // Renderer describes an object providing functions for rendering objects.
