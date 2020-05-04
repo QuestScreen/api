@@ -1,12 +1,10 @@
 package api
 
 import (
-	"encoding/hex"
 	"encoding/json"
-	"fmt"
 	"log"
 
-	"github.com/veandco/go-sdl2/sdl"
+	"github.com/QuestScreen/api/render"
 	"gopkg.in/yaml.v3"
 )
 
@@ -39,21 +37,24 @@ type ConfigItem interface {
 
 // SelectableFont is a ConfigItem that allow the user to select a font family.
 type SelectableFont struct {
-	FamilyIndex int       `json:"familyIndex"`
-	Size        FontSize  `json:"size"`
-	Style       FontStyle `json:"style"`
+	FamilyIndex int              `json:"familyIndex"`
+	Size        FontSize         `json:"size"`
+	Style       FontStyle        `json:"style"`
+	Color       render.RGBAColor `json:"color"`
 }
 
 type persistedSelectableFont struct {
-	Family string    `yaml:"family"`
-	Size   FontSize  `yaml:"size"`
-	Style  FontStyle `yaml:"style"`
+	Family string           `yaml:"family"`
+	Size   FontSize         `yaml:"size"`
+	Style  FontStyle        `yaml:"style"`
+	Color  render.RGBAColor `yaml:"color"`
 }
 
 type webSelectableFont struct {
-	FamilyIndex ValidatedInt `json:"familyIndex"`
-	Size        ValidatedInt `json:"size"`
-	Style       ValidatedInt `json:"style"`
+	FamilyIndex ValidatedInt     `json:"familyIndex"`
+	Size        ValidatedInt     `json:"size"`
+	Style       ValidatedInt     `json:"style"`
+	Color       render.RGBAColor `json:"color"`
 }
 
 // LoadWeb loads a selectable font from a json input
@@ -70,7 +71,8 @@ func (sf *SelectableFont) LoadWeb(
 	}
 	*sf = SelectableFont{FamilyIndex: tmp.FamilyIndex.Value,
 		Size:  FontSize(tmp.Size.Value),
-		Style: FontStyle(tmp.Style.Value)}
+		Style: FontStyle(tmp.Style.Value),
+		Color: tmp.Color}
 	return nil
 }
 
@@ -84,6 +86,7 @@ func (sf *SelectableFont) LoadPersisted(
 	}
 	sf.Size = tmp.Size
 	sf.Style = tmp.Style
+	sf.Color = tmp.Color
 	for i := 0; i < ctx.NumFontFamilies(); i++ {
 		if tmp.Family == ctx.FontFamilyName(i) {
 			sf.FamilyIndex = i
@@ -106,59 +109,17 @@ func (sf *SelectableFont) PersistingView(ctx ServerContext) interface{} {
 		Family: ctx.FontFamilyName(sf.FamilyIndex),
 		Size:   sf.Size,
 		Style:  sf.Style,
+		Color:  sf.Color,
 	}
-}
-
-// RGBColor represents a 24bit color in RGB color space.
-type RGBColor struct {
-	Red   uint8 `yaml:"r"`
-	Green uint8 `yaml:"g"`
-	Blue  uint8 `yaml:"b"`
-}
-
-// Use sets the color as draw color for the given renderer
-func (c *RGBColor) Use(renderer *sdl.Renderer) error {
-	return renderer.SetDrawColor(c.Red, c.Green, c.Blue, 255)
-}
-
-// WithAlpha generates an sdl.Color with the given alpha value.
-func (c *RGBColor) WithAlpha(alpha uint8) sdl.Color {
-	return sdl.Color{R: c.Red, G: c.Green, B: c.Blue, A: alpha}
-}
-
-// UnmarshalJSON loads a JSON string as HTML hexcode into RGBColor
-func (c *RGBColor) UnmarshalJSON(data []byte) error {
-	var s string
-	if err := json.Unmarshal(data, &s); err != nil {
-		return err
-	}
-	if len(s) != 7 || s[0] != '#' {
-		return fmt.Errorf("\"%s\" is not a valid color hexcode", s)
-	}
-	bytes, err := hex.DecodeString(s[1:])
-	if err != nil {
-		return err
-	}
-	c.Red = bytes[0]
-	c.Green = bytes[1]
-	c.Blue = bytes[2]
-	return nil
-}
-
-// MarshalJSON represents the color as JSON string containing a HTML hexcode
-func (c *RGBColor) MarshalJSON() ([]byte, error) {
-	bytes := [3]byte{c.Red, c.Green, c.Blue}
-	s := "#" + hex.EncodeToString(bytes[:])
-	return json.Marshal(&s)
 }
 
 // SelectableTexturedBackground is a ConfigItem that allows the user to
 // define a background color by setting a primary color and optionally,
 // a secondary color together with a texture.
 type SelectableTexturedBackground struct {
-	Primary      RGBColor `json:"primary"`
-	Secondary    RGBColor `json:"secondary"`
-	TextureIndex int      `json:"textureIndex"`
+	Primary      render.RGBColor `json:"primary"`
+	Secondary    render.RGBColor `json:"secondary"`
+	TextureIndex int             `json:"textureIndex"`
 }
 
 // LoadWeb loads a background from a json input
@@ -167,9 +128,9 @@ func (stb *SelectableTexturedBackground) LoadWeb(
 	input json.RawMessage, ctx ServerContext) SendableError {
 	textures := ctx.GetTextures()
 	value := struct {
-		Primary      RGBColor     `json:"primary"`
-		Secondary    RGBColor     `json:"secondary"`
-		TextureIndex ValidatedInt `json:"textureIndex"`
+		Primary      render.RGBColor `json:"primary"`
+		Secondary    render.RGBColor `json:"secondary"`
+		TextureIndex ValidatedInt    `json:"textureIndex"`
 	}{TextureIndex: ValidatedInt{Min: -1, Max: len(textures) - 1}}
 	if err := ReceiveData(input, &value); err != nil {
 		return err
@@ -180,7 +141,7 @@ func (stb *SelectableTexturedBackground) LoadWeb(
 }
 
 type persistedSelectableTextureBackground struct {
-	Primary, Secondary RGBColor
+	Primary, Secondary render.RGBColor
 	Texture            string
 }
 

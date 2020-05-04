@@ -3,7 +3,7 @@ package api
 import (
 	"time"
 
-	"github.com/veandco/go-sdl2/sdl"
+	"github.com/QuestScreen/api/render"
 	"gopkg.in/yaml.v3"
 )
 
@@ -170,7 +170,7 @@ type Module struct {
 	// data;
 	// RebuildState will be issued to the renderer before the first Render() call
 	// to fully initialize its state.
-	CreateRenderer func(backend *sdl.Renderer,
+	CreateRenderer func(backend *render.Renderer,
 		ms MessageSender) (ModuleRenderer, error)
 	// CreateState will be called in the server thread. It shall create a
 	// ModuleState for the module created by CreateModule.

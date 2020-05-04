@@ -3,7 +3,6 @@ package api
 import (
 	"fmt"
 
-	"github.com/veandco/go-sdl2/ttf"
 	"gopkg.in/yaml.v3"
 )
 
@@ -44,25 +43,6 @@ const (
 	// NumFontSizes is not a valid size, but used for iterating
 	NumFontSizes
 )
-
-// StyledFont describes a font family member with a certain style.
-// This style is available for all FontSizes.
-type StyledFont interface {
-	// Font searches for a loaded ttf.Font and if none exists, loads it.
-	// This func may only be called in the OpenGL thread.
-	Font(size FontSize) *ttf.Font
-}
-
-// FontFamily describes a family of fonts. The family may have any number,
-// but at least one, FontStyle available.
-type FontFamily interface {
-	// Name of this font family.
-	Name() string
-	// Styled returns a StyledFont that matches the requested style as good as
-	// possible. If the requested style is not available, a style close to it
-	// is selected.
-	Styled(style FontStyle) StyledFont
-}
 
 // UnmarshalYAML sets the font style from a YAML scalar
 func (fs *FontStyle) UnmarshalYAML(value *yaml.Node) error {

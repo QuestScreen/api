@@ -1,8 +1,7 @@
 package api
 
 import (
-	"github.com/veandco/go-sdl2/sdl"
-	"github.com/veandco/go-sdl2/ttf"
+	"github.com/QuestScreen/api/render"
 )
 
 // the interfaces declared in this file are implemented by the QuestScreen core.
@@ -70,15 +69,15 @@ type ServerContext interface {
 // use it to pre-render content into a texture you can later copy to the
 // renderer when rendering a scene.
 //
-// Creation of a Canvas sets the target of the underlying sdl.Renderer to the
+// Creation of a Canvas sets the target of the underlying render.Renderer to the
 // texture this Canvas draws on. Ensure that you either Close or Finish a
 // Canvas object after creating it to reset the renderer's target.
 //
 // To draw into the canvas, use the normal renderer.
 type Canvas interface {
 	// Finish resets the target of the underlying renderer and returns the
-	// rendered picture as texture.
-	Finish() *sdl.Texture
+	// rendered image.
+	Finish() render.Image
 	// Close resets the target of the underlying renderer.
 	// It is idempotent and does nothing if Finish() was called before.
 	Close()
@@ -105,9 +104,7 @@ const (
 // RenderContext is the context given to all rendering funcs of a module
 type RenderContext interface {
 	ResourceProvider
-	Renderer() *sdl.Renderer
-	// Font returns the font face of the selected font.
-	Font(fontFamily int, style FontStyle, size FontSize) *ttf.Font
+	render.Renderer
 	// Unit is the scaled smallest unit in pixels. It is defined as being
 	// 1/144 of the screen's width or height, whichever is smaller.
 	// Borders typically have the size of one Unit.
@@ -117,23 +114,24 @@ type RenderContext interface {
 	// Unit avoids making stuff too small for your users to see.
 	Unit() int32
 	// UpdateMask is a helper function that loads a selected grayscale image into
-	// an SDL texture which has its alpha channel set to the image's grayscale
-	// channel and the color channels set to the given color.
+	// an the given Image so that its alpha channel is set to the image's
+	// grayscale channel and the color channels are set to the given secondary
+	// color.
 	//
-	// If *target previously pointed to a texture, that texture is destroyed.
-	// If not mask texture is selected, *target will be set to `nil`.
-	UpdateMask(target **sdl.Texture, bg SelectableTexturedBackground)
-	// TextToTexture renders the given text with the given font and the given
-	// color into a texture with transparent background.
-	// Returns nil if it wasn't able to create the texture.
-	TextToTexture(text string, font *ttf.Font, color sdl.Color) *sdl.Texture
+	// If *target is non-empty, the previous texture gets destroyed.
+	// If not mask texture is selected, *target will be empty.
+	UpdateMask(target *render.Image, bg SelectableTexturedBackground)
+	// RenderText renders the given text with the given font into an image with
+	// transparent background.
+	// Returns an empty image if it wasn't able to create the texture.
+	RenderText(text string, font SelectableFont) render.Image
 	// CreateCanvas creates a canvas to draw content into, and optionally fills it
 	// with background color and/or with a repeating tile texture.
 	//
 	// Borders are added in each given direction. Border width/height is added to
 	// the given innerWidth / innerHeight values.
-	CreateCanvas(innerWidth, innerHeight int32, background *sdl.Color,
-		tile *sdl.Texture, borders Directions) Canvas
+	CreateCanvas(innerWidth, innerHeight int32, background render.RGBAColor,
+		tile render.Image, borders Directions) Canvas
 }
 
 // ExtendedRenderContext is the context used for rebuilding the whole module
