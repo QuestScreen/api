@@ -4,14 +4,12 @@ import (
 	"time"
 
 	"github.com/QuestScreen/api/render"
+	"github.com/QuestScreen/api/resources"
 	"gopkg.in/yaml.v3"
 )
 
 // the interfaces declared in this file are to be implemented by
 // a QuestScreen module, which is provided by a plugin.
-
-// ResourceCollectionIndex indexes all resource collections of a module.
-type ResourceCollectionIndex int
 
 // ModulePureEndpoint is an endpoint of a module for the HTTP server.
 // It takes POST requests on the path specified by the ModuleDescriptor.
@@ -92,26 +90,6 @@ type IDEndpointProvider interface {
 	IDEndpoint(index int) ModuleIDEndpoint
 }
 
-// ResourceSelector defines where a module finds resource files.
-// A selector can either be used to find one specific file (in which case
-// Name must be non-empty) or a list of files (in which case Name must be empty
-// and Suffixes may be set).
-//
-// The file(s) are searched in the Subdirectory inside the module's directory in
-// the current scene, group, system and base directory (in that order).
-type ResourceSelector struct {
-	// may be empty, in which case resource files are searched directly
-	// in the module directories.
-	Subdirectory string
-	// Name of the file including suffix. If not empty, only the first file
-	// matching the name is returned.
-	Name string
-	// filters files by suffix. If empty or nil, no filter will be applied
-	// (note however that files starting with a dot will always be filtered out).
-	// ignored if Name is not empty.
-	Suffixes []string
-}
-
 // Module describes a module that has a persistable state, a renderer that
 // paints something to the display, and client-side HTML/JS to control the
 // module.
@@ -125,7 +103,7 @@ type Module struct {
 	// ResourceCollections lists selectors for resource collections of this
 	// module. The maximum ResourceCollectionIndex available to this module is
 	// len(ResourceCollections()) - 1.
-	ResourceCollections []ResourceSelector
+	ResourceCollections []resources.Selector
 	// EndpointPaths defines a list of API endpoints for the client to change this
 	// module's state and trigger animations.
 	//
