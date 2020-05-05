@@ -1,4 +1,4 @@
-package api
+package server
 
 // SerializableItem describes an item that can be serialized.
 // Serialization happens both when the item is sent to a client via the Web API,
@@ -15,12 +15,12 @@ type SerializableItem interface {
 	// The returned view will be serialized as JSON, possibly as part of a
 	// larger structure. If you need to manually serialize the structure, return
 	// a json.RawMessage.
-	WebView(ctx ServerContext) interface{}
+	WebView(ctx Context) interface{}
 
 	// PersistingView returns a view of the data structure that can be
 	// communicated to the client.
 	//
 	// The returned view will be serialized as YAML as part of a larger structure.
 	// If you need to manually serialize the structure, return a *yaml.Node.
-	PersistingView(ctx ServerContext) interface{}
+	PersistingView(ctx Context) interface{}
 }

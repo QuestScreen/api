@@ -1,19 +1,22 @@
-package api
+package module
 
 import (
 	"time"
 
+	"github.com/QuestScreen/api/common"
+	"github.com/QuestScreen/api/group"
 	"github.com/QuestScreen/api/render"
 	"github.com/QuestScreen/api/resources"
+	"github.com/QuestScreen/api/server"
 	"gopkg.in/yaml.v3"
 )
 
 // the interfaces declared in this file are to be implemented by
 // a QuestScreen module, which is provided by a plugin.
 
-// ModulePureEndpoint is an endpoint of a module for the HTTP server.
-// It takes POST requests on the path specified by the ModuleDescriptor.
-type ModulePureEndpoint interface {
+// PureEndpoint is an endpoint of a module for the HTTP server.
+// It takes POST requests on the path specified by Module.
+type PureEndpoint interface {
 	// Post handles a POST request. Two return values are expected:
 	//
 	// The first return value will be serialized to JSON and sent back to the
@@ -28,66 +31,54 @@ type ModulePureEndpoint interface {
 	// If an error is returned, InitTransition will not be called and both return
 	// values will be ignored. The server will the respond according to the cause
 	// of the returned error.
-	Post(payload []byte) (interface{}, interface{}, SendableError)
+	Post(payload []byte) (interface{}, interface{}, common.SendableError)
 }
 
-// ModuleIDEndpoint is an endpoint of a module for the HTTP server.
-// It takes POST requests on the path specified by the ModuleDescriptor, with an
+// IDEndpoint is an endpoint of a module for the HTTP server.
+// It takes POST requests on the path specified by Module, with an
 // additional URL path item interpreted as ID.
-type ModuleIDEndpoint interface {
+type IDEndpoint interface {
 	// Post works analoguous to ModulePureEndpoint.Post, but gets the id from the
 	// request URL path as additional parameter.
-	Post(id string, payload []byte) (interface{}, interface{}, SendableError)
+	Post(id string, payload []byte) (interface{}, interface{}, common.SendableError)
 }
 
-// ModuleState describes the state of a module. It is written to and loaded
+// State describes the state of a module. It is written to and loaded
 // from a group's state.yaml.
 //
 // All funcs are expected to be called in the server thread.
-type ModuleState interface {
-	SerializableItem
+type State interface {
+	server.SerializableItem
 	// CreateRendererData generates a data object that contains all required data
-	// for the ModuleRenderer to rebuild its state. The returned data object will
+	// for the Renderer to rebuild its state. The returned data object will
 	// be handed over to the renderer's RebuildState. For thread safety, it should
 	// not be a pointer into the ModuleState object.
 	CreateRendererData() interface{}
 }
 
-// HeroChangeAction is an enum describing a change in the list of heroes
-type HeroChangeAction int
-
-const (
-	// HeroAdded describes the action of adding a hero to the list of heroes
-	HeroAdded HeroChangeAction = iota
-	// HeroModified describes the action of modifying a hero's data
-	HeroModified
-	// HeroDeleted describes the action of deleting a hero from the list of heroes
-	HeroDeleted
-)
-
-// HeroAwareModuleState is an interface that must be implemented by module
+// HeroAwareState is an interface that must be implemented by module
 // states if they work with heroes. It lets the application send messages to the
 // state when the list of heroes changes.
-type HeroAwareModuleState interface {
-	HeroListChanged(heroes HeroList, action HeroChangeAction, heroIndex int)
+type HeroAwareState interface {
+	HeroListChanged(heroes group.HeroList, action group.HeroChangeAction, heroIndex int)
 }
 
-// PureEndpointProvider is a ModuleState extension for modules whose
-// ModuleDescriptor defines one or more pure endpoints in its EndpointPaths.
+// PureEndpointProvider is a State extension for modules whose
+// Module defines one or more pure endpoints in its EndpointPaths.
 type PureEndpointProvider interface {
 	// PureEndpoint returns the pure endpoint defined at the given index of the
-	// ModuleDecriptor's EndpointPaths slice. This should be a cheap getter as it
+	// Module's EndpointPaths slice. This should be a cheap getter as it
 	// will be called for every request on one of the module's pure endpoints.
-	PureEndpoint(index int) ModulePureEndpoint
+	PureEndpoint(index int) PureEndpoint
 }
 
-// IDEndpointProvider is a ModuleState extension for modules whose
-// ModuleDescriptor defines one or more id endpoints in its EndpointPaths.
+// IDEndpointProvider is a State extension for modules whose
+// Module defines one or more id endpoints in its EndpointPaths.
 type IDEndpointProvider interface {
 	// IDEndpoint returns the id endpoint defined at the given index of the
-	// ModuleDescriptor's EndpointPaths slice. This should be a cheap getter as it
+	// Module's EndpointPaths slice. This should be a cheap getter as it
 	// will be called for every request on one of the module's id endpoints.
-	IDEndpoint(index int) ModuleIDEndpoint
+	IDEndpoint(index int) IDEndpoint
 }
 
 // Module describes a module that has a persistable state, a renderer that
@@ -101,7 +92,7 @@ type Module struct {
 	// letters, digits, and the symbols `.,-_`
 	ID string
 	// ResourceCollections lists selectors for resource collections of this
-	// module. The maximum ResourceCollectionIndex available to this module is
+	// module. The maximum resources.CollectionIndex available to this module is
 	// len(ResourceCollections()) - 1.
 	ResourceCollections []resources.Selector
 	// EndpointPaths defines a list of API endpoints for the client to change this
@@ -149,7 +140,7 @@ type Module struct {
 	// RebuildState will be issued to the renderer before the first Render() call
 	// to fully initialize its state.
 	CreateRenderer func(backend *render.Renderer,
-		ms MessageSender) (ModuleRenderer, error)
+		ms server.MessageSender) (Renderer, error)
 	// CreateState will be called in the server thread. It shall create a
 	// ModuleState for the module created by CreateModule.
 	//
@@ -163,13 +154,13 @@ type Module struct {
 	//
 	// If the module accesses a group's heroes, its state must additionally
 	// implement HeroAwareModuleState.
-	CreateState func(input *yaml.Node, ctx ServerContext,
-		ms MessageSender) (ModuleState, error)
+	CreateState func(input *yaml.Node, ctx server.Context,
+		ms server.MessageSender) (State, error)
 }
 
-// ModuleRenderer describes the renderer of a module.
+// Renderer describes the renderer of a module.
 // This object belongs with the OpenGL thread.
-type ModuleRenderer interface {
+type Renderer interface {
 	// Descriptor shall return the Module this renderer belongs to.
 	Descriptor() *Module
 	// Rebuild will be called after any action that requires rebuilding the
@@ -184,7 +175,7 @@ type ModuleRenderer interface {
 	//
 	// A call to RebuildState will always immediately be followed by a call to
 	// Render.
-	Rebuild(ctx ExtendedRenderContext, data interface{}, config interface{})
+	Rebuild(ctx render.Context, data interface{}, config interface{})
 	// InitTransition will be called after the current ModuleState has been
 	// modified via HandleAction.
 	// data contains the data generated by HandleAction.
@@ -197,21 +188,21 @@ type ModuleRenderer interface {
 	// if 0 is returned, TransitionStep will never be called; if a negative
 	// value is returned, neither FinishTransition nor Render will be
 	// called.
-	InitTransition(ctx RenderContext, data interface{}) time.Duration
+	InitTransition(ctx render.Context, data interface{}) time.Duration
 	// TransitionStep should update the renderer's current state while
 	// transitioning. A call to TransitionStep() will always immediately be
 	// followed by a call to Render().
 	//
 	// The given elapsed time is guaranteed to always be smaller than what was
 	// returned by InitTransition().
-	TransitionStep(ctx RenderContext, elapsed time.Duration)
+	TransitionStep(ctx render.Context, elapsed time.Duration)
 	// FinishTransition() is for cleanup after a transition and for preparing the
 	// final state. It will be called exactly once for each call to
 	// InitTransition() that returned a non-negative value.
 	//
 	// A call to FinishTransition() will always immediately be followed by a call
 	// to Render().
-	FinishTransition(ctx RenderContext)
+	FinishTransition(ctx render.Context)
 	// Render renders the Module's current state.
-	Render(ctx RenderContext)
+	Render(ctx render.Context)
 }
