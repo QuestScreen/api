@@ -31,4 +31,7 @@ type Renderer interface {
 	// DrawImage renders the given image if it is not empty, using the given
 	// transformation. alpha modifies the image's opacity.
 	DrawImage(image Image, t Transform, alpha uint8)
+	// Center returns a transformation that moves a rectangle with given width and
+	// height to the center of the screen
+	Center(width int32, height int32) Transform
 }
