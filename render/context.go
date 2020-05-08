@@ -5,9 +5,13 @@ import (
 )
 
 // Context is the context given to all rendering funcs of a module
-// Besides being a renderer, it contains several helper functions.
+// It provides the rendering facilities of Renderer, as well as information
+// about the rendering area and utility functions.
 type Context interface {
 	Renderer
+	// Display returns a rectangle that describes the dimensions of the current
+	// rendering area.
+	Display() Rectangle
 	// Unit is the scaled smallest unit in pixels. It is defined as being
 	// 1/144 of the screen's width or height, whichever is smaller.
 	// Borders typically have the size of one Unit.
@@ -24,15 +28,10 @@ type Context interface {
 	// If *target is non-empty, the previous texture gets destroyed.
 	// If not mask texture is selected, *target will be empty.
 	UpdateMask(target *Image, bg config.Background)
-	// RenderText renders the given text with the given font into an image with
-	// transparent background.
-	// Returns an empty image if it wasn't able to create the texture.
-	RenderText(text string, font config.Font) Image
-	// CreateCanvas creates a canvas to draw content into, and optionally fills it
-	// with background color and/or with a repeating tile texture.
-	//
-	// Borders are added in each given direction. Border width/height is added to
-	// the given innerWidth / innerHeight values.
-	CreateCanvas(innerWidth, innerHeight int32, bg config.Background,
-		tile Image, borders Directions) Canvas
+	// LoadImage loads an image file from the specified path.
+	// if an error is returned, the returned image is empty.
+	LoadImage(path string) (Image, error)
+	// FreeImage destroys the texture associated with the image (if one exists)
+	// and sets i to be the empty image. Does nothing on empty images.
+	FreeImage(i *Image)
 }
