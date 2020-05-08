@@ -13,9 +13,9 @@ import (
 // define a background color by setting a primary color and optionally,
 // a secondary color together with a texture.
 type Background struct {
-	Primary      common.RGBColor `json:"primary"`
-	Secondary    common.RGBColor `json:"secondary"`
-	TextureIndex int             `json:"textureIndex"`
+	Primary      common.RGBAColor `json:"primary"`
+	Secondary    common.RGBAColor `json:"secondary"`
+	TextureIndex int              `json:"textureIndex"`
 }
 
 // LoadWeb loads a background from a json input
@@ -24,8 +24,8 @@ func (b *Background) LoadWeb(
 	input json.RawMessage, ctx server.Context) common.SendableError {
 	textures := ctx.GetTextures()
 	value := struct {
-		Primary      common.RGBColor     `json:"primary"`
-		Secondary    common.RGBColor     `json:"secondary"`
+		Primary      common.RGBAColor    `json:"primary"`
+		Secondary    common.RGBAColor    `json:"secondary"`
 		TextureIndex server.ValidatedInt `json:"textureIndex"`
 	}{TextureIndex: server.ValidatedInt{Min: -1, Max: len(textures) - 1}}
 	if err := server.ReceiveData(input, &value); err != nil {
@@ -37,7 +37,7 @@ func (b *Background) LoadWeb(
 }
 
 type persistedBackground struct {
-	Primary, Secondary common.RGBColor
+	Primary, Secondary common.RGBAColor
 	Texture            string
 }
 

@@ -1,7 +1,6 @@
 package render
 
 import (
-	"github.com/QuestScreen/api/common"
 	"github.com/QuestScreen/api/config"
 )
 
@@ -34,6 +33,6 @@ type Context interface {
 	//
 	// Borders are added in each given direction. Border width/height is added to
 	// the given innerWidth / innerHeight values.
-	CreateCanvas(innerWidth, innerHeight int32, background common.RGBAColor,
+	CreateCanvas(innerWidth, innerHeight int32, bg config.Background,
 		tile Image, borders Directions) Canvas
 }
