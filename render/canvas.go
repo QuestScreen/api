@@ -22,16 +22,19 @@ const (
 // use it to pre-render content into a texture you can later copy to the
 // renderer when rendering a scene.
 //
-// Creation of a Canvas sets the target of the underlying render.Renderer to the
-// texture this Canvas draws on. Ensure that you either Close or Finish a
+// Creation of a Canvas sets the target of the underlying Renderer to the
+// texture of this Canvas. Ensure that you either Close or Finish a
 // Canvas object after creating it to reset the renderer's target.
+// It is recommended to use `defer canvas.Close()` right after creation, which
+// will do nothing if you explicitly call Finish() in the following code.
 //
-// To draw into the canvas, use the normal renderer.
+// To draw into the canvas, simply use the Renderer API.
 type Canvas interface {
 	// Finish resets the target of the underlying renderer and returns the
 	// rendered image.
 	Finish() Image
-	// Close resets the target of the underlying renderer.
+	// Close resets the target of the underlying renderer and deletes the
+	// underlying texture if it was not yet finished.
 	// It is idempotent and does nothing if Finish() was called before.
 	Close()
 }
