@@ -10,8 +10,8 @@ import (
 type FontStyle int
 
 const (
-	// Standard is the default font style
-	Standard FontStyle = iota
+	// Regular is the default font style
+	Regular FontStyle = iota
 	// Bold is the bold font style
 	Bold
 	// Italic is the italic font style
@@ -51,8 +51,8 @@ func (fs *FontStyle) UnmarshalYAML(value *yaml.Node) error {
 		return err
 	}
 	switch name {
-	case "Standard":
-		*fs = Standard
+	case "Regular":
+		*fs = Regular
 	case "Bold":
 		*fs = Bold
 	case "Italic":
@@ -68,8 +68,8 @@ func (fs *FontStyle) UnmarshalYAML(value *yaml.Node) error {
 // MarshalYAML maps the given font style to a string
 func (fs FontStyle) MarshalYAML() (interface{}, error) {
 	switch fs {
-	case Standard:
-		return "Standard", nil
+	case Regular:
+		return "Regular", nil
 	case Bold:
 		return "Bold", nil
 	case Italic:
