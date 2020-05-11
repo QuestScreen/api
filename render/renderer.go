@@ -54,9 +54,12 @@ type Renderer interface {
 	// the given innerWidth / innerHeight values.
 	CreateCanvas(innerWidth, innerHeight int32, bg config.Background,
 		borders Directions) Canvas
-	// LoadImage loads an image file from the specified path.
+	// LoadImageFile loads an image file from the specified path.
 	// if an error is returned, the returned image is empty.
-	LoadImage(path string) (Image, error)
+	LoadImageFile(path string) (Image, error)
+	// LoadImageMem loads an image from data in memory.
+	// if an error is returned, the returned image is empty.
+	LoadImageMem(data []byte) (Image, error)
 	// FreeImage destroys the texture associated with the image (if one exists)
 	// and sets i to be the empty image. Does nothing on empty images.
 	FreeImage(i *Image)
