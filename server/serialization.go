@@ -1,14 +1,14 @@
 package server
 
-// SerializableItem describes an item that can be serialized.
+// Serializable describes an item that can be serialized.
 // Serialization happens both when the item is sent to a client via the Web API,
 // and when the item is persisted to the file system.
 //
-// A SerializableItem provides two views: One for communicating the item to the
+// A Serializable item provides two views: One for communicating the item to the
 // web client, and one for persisting it to the file system. Both
 // implementations may trivially return a pointer to the item itself, if no
 // special handling is required.
-type SerializableItem interface {
+type Serializable interface {
 	// WebView returns a view of the data structure as it should be sent to the
 	// web client.
 	//

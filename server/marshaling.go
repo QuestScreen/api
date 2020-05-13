@@ -6,17 +6,15 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
-
-	"github.com/QuestScreen/api/common"
 )
 
 // ReceiveData loads JSON input into a target object and wraps errors in
 // BadRequest objects.
-func ReceiveData(input []byte, target interface{}) *common.BadRequest {
+func ReceiveData(input []byte, target interface{}) *BadRequest {
 	decoder := json.NewDecoder(bytes.NewReader(input))
 	decoder.DisallowUnknownFields()
 	if err := decoder.Decode(target); err != nil {
-		return &common.BadRequest{Message: "error in JSON structure", Inner: err}
+		return &BadRequest{Message: "error in JSON structure", Inner: err}
 	}
 	return nil
 }

@@ -1,4 +1,4 @@
-package common
+package fonts
 
 import (
 	"fmt"
@@ -6,46 +6,46 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// FontStyle describes possible styles of a font
-type FontStyle int
+// Style describes possible styles of a font
+type Style int
 
 const (
 	// Regular is the default font style
-	Regular FontStyle = iota
+	Regular Style = iota
 	// Bold is the bold font style
 	Bold
 	// Italic is the italic font style
 	Italic
 	// BoldItalic is the bold and italic font style
 	BoldItalic
-	// NumFontStyles is not a valid FontStyle, but used for iterating.
-	NumFontStyles
+	// NumStyles is not a valid Style, but used for iterating.
+	NumStyles
 )
 
-// FontSize describes the size of a font.
+// Size describes the size of a font.
 // Font sizes are relative to the screen size.
-type FontSize int
+type Size int
 
 const (
-	// SmallFont is the smallest size available
-	SmallFont FontSize = iota
-	// ContentFont is the size used for content text by default.
-	ContentFont
-	// MediumFont is a size between ContentFont and HeadingFont.
-	MediumFont
-	// HeadingFont is the size used for heading text by default.
-	HeadingFont
-	// LargeFont is a size larger than HeadingFont.
-	LargeFont
-	// HugeFont is the largest font; usually used for displaying a single word
+	// Small is the smallest size available
+	Small Size = iota
+	// Content is the size used for content text by default.
+	Content
+	// Medium is a size between Content and Heading.
+	Medium
+	// Heading is the size used for heading text by default.
+	Heading
+	// Large is a size larger than Heading.
+	Large
+	// Huge is the largest font; usually used for displaying a single word
 	// on the screen.
-	HugeFont
-	// NumFontSizes is not a valid size, but used for iterating
-	NumFontSizes
+	Huge
+	// NumSizes is not a valid Size, but used for iterating
+	NumSizes
 )
 
 // UnmarshalYAML sets the font style from a YAML scalar
-func (fs *FontStyle) UnmarshalYAML(value *yaml.Node) error {
+func (fs *Style) UnmarshalYAML(value *yaml.Node) error {
 	var name string
 	if err := value.Decode(&name); err != nil {
 		return err
@@ -66,7 +66,7 @@ func (fs *FontStyle) UnmarshalYAML(value *yaml.Node) error {
 }
 
 // MarshalYAML maps the given font style to a string
-func (fs FontStyle) MarshalYAML() (interface{}, error) {
+func (fs Style) MarshalYAML() (interface{}, error) {
 	switch fs {
 	case Regular:
 		return "Regular", nil
@@ -82,24 +82,24 @@ func (fs FontStyle) MarshalYAML() (interface{}, error) {
 }
 
 // UnmarshalYAML sets the font size from a YAML scalar
-func (fs *FontSize) UnmarshalYAML(value *yaml.Node) error {
+func (fs *Size) UnmarshalYAML(value *yaml.Node) error {
 	var name string
 	if err := value.Decode(&name); err != nil {
 		return err
 	}
 	switch name {
 	case "Small":
-		*fs = SmallFont
+		*fs = Small
 	case "Content":
-		*fs = ContentFont
+		*fs = Content
 	case "Medium":
-		*fs = MediumFont
+		*fs = Medium
 	case "Heading":
-		*fs = HeadingFont
+		*fs = Heading
 	case "Large":
-		*fs = LargeFont
+		*fs = Large
 	case "Huge":
-		*fs = HugeFont
+		*fs = Huge
 	default:
 		return fmt.Errorf("Unknown font size: %s", name)
 	}
@@ -107,19 +107,19 @@ func (fs *FontSize) UnmarshalYAML(value *yaml.Node) error {
 }
 
 // MarshalYAML maps the given font size to a string
-func (fs FontSize) MarshalYAML() (interface{}, error) {
+func (fs Size) MarshalYAML() (interface{}, error) {
 	switch fs {
-	case SmallFont:
+	case Small:
 		return "Small", nil
-	case ContentFont:
+	case Content:
 		return "Content", nil
-	case MediumFont:
+	case Medium:
 		return "Medium", nil
-	case HeadingFont:
+	case Heading:
 		return "Heading", nil
-	case LargeFont:
+	case Large:
 		return "Large", nil
-	case HugeFont:
+	case Huge:
 		return "Huge", nil
 	default:
 		return nil, fmt.Errorf("Unknown font size: %v", fs)

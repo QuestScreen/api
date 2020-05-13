@@ -1,8 +1,8 @@
 package render
 
 import (
-	"github.com/QuestScreen/api/common"
-	"github.com/QuestScreen/api/config"
+	"github.com/QuestScreen/api/colors"
+	"github.com/QuestScreen/api/fonts"
 )
 
 // Image is a rectangular image stored as OpenGL texture
@@ -39,20 +39,20 @@ type Renderer interface {
 	Unit() int32
 	// FillRect fills the rectangle with the specified dimensions with the
 	// specified color. The rectangle is positions via the given transformation.
-	FillRect(width, height int32, t Transform, color common.RGBAColor)
+	FillRect(width, height int32, t Transform, color colors.RGBA)
 	// DrawImage renders the given image if it is not empty, using the given
 	// transformation. alpha modifies the image's opacity.
 	DrawImage(image Image, t Transform, alpha uint8)
 	// RenderText renders the given text with the given font into an image with
 	// transparent background.
 	// Returns an empty image if it wasn't able to create the texture.
-	RenderText(text string, font config.Font) Image
+	RenderText(text string, font fonts.Config) Image
 	// CreateCanvas creates a canvas to draw content into, and fills it with the
 	// given background.
 	//
 	// Borders are added in each given direction. Border width/height is added to
 	// the given innerWidth / innerHeight values.
-	CreateCanvas(innerWidth, innerHeight int32, bg config.Background,
+	CreateCanvas(innerWidth, innerHeight int32, bg colors.Background,
 		borders Directions) Canvas
 	// LoadImageFile loads an image file from the specified path.
 	// if an error is returned, the returned image is empty.

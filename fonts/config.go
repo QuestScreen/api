@@ -1,58 +1,59 @@
-package config
+package fonts
 
 import (
 	"encoding/json"
+	"image/color"
 	"log"
 
-	"github.com/QuestScreen/api/common"
 	"github.com/QuestScreen/api/server"
 	"gopkg.in/yaml.v3"
 )
 
-// Font is a ConfigItem that allow the user to select a font family.
-type Font struct {
-	FamilyIndex int              `json:"familyIndex"`
-	Size        common.FontSize  `json:"size"`
-	Style       common.FontStyle `json:"style"`
-	Color       common.RGBAColor `json:"color"`
+// Config is a config.Item that allows the user to select a font family, size,
+// style and color.
+type Config struct {
+	FamilyIndex int        `json:"familyIndex"`
+	Size        Size       `json:"size"`
+	Style       Style      `json:"style"`
+	Color       color.RGBA `json:"color"`
 }
 
 type persistedFont struct {
-	Family string           `yaml:"family"`
-	Size   common.FontSize  `yaml:"size"`
-	Style  common.FontStyle `yaml:"style"`
-	Color  common.RGBAColor `yaml:"color"`
+	Family string     `yaml:"family"`
+	Size   Size       `yaml:"size"`
+	Style  Style      `yaml:"style"`
+	Color  color.RGBA `yaml:"color"`
 }
 
 type webFont struct {
 	FamilyIndex server.ValidatedInt `json:"familyIndex"`
 	Size        server.ValidatedInt `json:"size"`
 	Style       server.ValidatedInt `json:"style"`
-	Color       common.RGBAColor    `json:"color"`
+	Color       color.RGBA          `json:"color"`
 }
 
 // LoadWeb loads a font from a json input
 // `{"familyIndex": <number>, "size": <number>, "style": <number>}`
-func (f *Font) LoadWeb(
-	input json.RawMessage, ctx server.Context) common.SendableError {
+func (f *Config) LoadWeb(
+	input json.RawMessage, ctx server.Context) server.SendableError {
 	tmp := webFont{
 		FamilyIndex: server.ValidatedInt{Min: 0, Max: ctx.NumFontFamilies() - 1},
-		Size:        server.ValidatedInt{Min: 0, Max: int(common.HugeFont)},
-		Style:       server.ValidatedInt{Min: 0, Max: int(common.BoldItalic)},
+		Size:        server.ValidatedInt{Min: 0, Max: int(Huge)},
+		Style:       server.ValidatedInt{Min: 0, Max: int(BoldItalic)},
 	}
 	if err := server.ReceiveData(input, &tmp); err != nil {
 		return err
 	}
-	*f = Font{FamilyIndex: tmp.FamilyIndex.Value,
-		Size:  common.FontSize(tmp.Size.Value),
-		Style: common.FontStyle(tmp.Style.Value),
+	*f = Config{FamilyIndex: tmp.FamilyIndex.Value,
+		Size:  Size(tmp.Size.Value),
+		Style: Style(tmp.Style.Value),
 		Color: tmp.Color}
 	return nil
 }
 
 // LoadPersisted loads a selectable font from a YAML input
 // `{family: <string>, size: <number>, style: <number>}`
-func (f *Font) LoadPersisted(
+func (f *Config) LoadPersisted(
 	input *yaml.Node, ctx server.Context) error {
 	var tmp persistedFont
 	if err := input.Decode(&tmp); err != nil {
@@ -73,12 +74,12 @@ func (f *Font) LoadPersisted(
 }
 
 // WebView returns the object itself.
-func (f *Font) WebView(ctx server.Context) interface{} {
+func (f *Config) WebView(ctx server.Context) interface{} {
 	return f
 }
 
 // PersistingView returns a view that gives the family name as string.
-func (f *Font) PersistingView(ctx server.Context) interface{} {
+func (f *Config) PersistingView(ctx server.Context) interface{} {
 	return &persistedFont{
 		Family: ctx.FontFamilyName(f.FamilyIndex),
 		Size:   f.Size,

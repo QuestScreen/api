@@ -1,31 +1,30 @@
-package config
+package colors
 
 import (
 	"encoding/json"
 	"log"
 
-	"github.com/QuestScreen/api/common"
 	"github.com/QuestScreen/api/server"
 	"gopkg.in/yaml.v3"
 )
 
-// Background is an Item that allows the user to
+// Background is a config.Item that allows the user to
 // define a background color by setting a primary color and optionally,
 // a secondary color together with a texture.
 type Background struct {
-	Primary      common.RGBAColor `json:"primary"`
-	Secondary    common.RGBAColor `json:"secondary"`
-	TextureIndex int              `json:"textureIndex"`
+	Primary      RGBA `json:"primary"`
+	Secondary    RGBA `json:"secondary"`
+	TextureIndex int  `json:"textureIndex"`
 }
 
 // LoadWeb loads a background from a json input
 // `{"primary": <rgb>, "secondary": <rgb>, "textureIndex": <number>}`
 func (b *Background) LoadWeb(
-	input json.RawMessage, ctx server.Context) common.SendableError {
+	input json.RawMessage, ctx server.Context) server.SendableError {
 	textures := ctx.GetTextures()
 	value := struct {
-		Primary      common.RGBAColor    `json:"primary"`
-		Secondary    common.RGBAColor    `json:"secondary"`
+		Primary      RGBA                `json:"primary"`
+		Secondary    RGBA                `json:"secondary"`
 		TextureIndex server.ValidatedInt `json:"textureIndex"`
 	}{TextureIndex: server.ValidatedInt{Min: -1, Max: len(textures) - 1}}
 	if err := server.ReceiveData(input, &value); err != nil {
@@ -37,7 +36,7 @@ func (b *Background) LoadWeb(
 }
 
 type persistedBackground struct {
-	Primary, Secondary common.RGBAColor
+	Primary, Secondary RGBA
 	Texture            string
 }
 

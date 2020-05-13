@@ -1,9 +1,10 @@
+// Package config defines the interface of a data item that is part of a
+// module's configuration.
 package config
 
 import (
 	"encoding/json"
 
-	"github.com/QuestScreen/api/common"
 	"github.com/QuestScreen/api/server"
 	"gopkg.in/yaml.v3"
 )
@@ -14,7 +15,7 @@ import (
 // you may use the tags `json:` and `yaml:` on those fields as documented in
 // the json and yaml.v3 packages.
 type Item interface {
-	server.SerializableItem
+	server.Serializable
 	// LoadWeb loads the item's state from JSON data that as been
 	// sent from the web client.
 	//
@@ -22,7 +23,7 @@ type Item interface {
 	// (typically a *BadRequest) and should not alter the item's state.
 	// Implementation should typically use the ReceiveData func, possibly together
 	// with the strict ValidatedX types provided by the api package.
-	LoadWeb(input json.RawMessage, ctx server.Context) common.SendableError
+	LoadWeb(input json.RawMessage, ctx server.Context) server.SendableError
 	// LoadPersisted loads the item's state from YAML data that has been
 	// read from the file system.
 	//

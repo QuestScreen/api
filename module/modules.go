@@ -3,7 +3,6 @@ package module
 import (
 	"time"
 
-	"github.com/QuestScreen/api/common"
 	"github.com/QuestScreen/api/group"
 	"github.com/QuestScreen/api/render"
 	"github.com/QuestScreen/api/resources"
@@ -31,7 +30,7 @@ type PureEndpoint interface {
 	// If an error is returned, InitTransition will not be called and both return
 	// values will be ignored. The server will the respond according to the cause
 	// of the returned error.
-	Post(payload []byte) (interface{}, interface{}, common.SendableError)
+	Post(payload []byte) (interface{}, interface{}, server.SendableError)
 }
 
 // IDEndpoint is an endpoint of a module for the HTTP server.
@@ -40,7 +39,7 @@ type PureEndpoint interface {
 type IDEndpoint interface {
 	// Post works analoguous to ModulePureEndpoint.Post, but gets the id from the
 	// request URL path as additional parameter.
-	Post(id string, payload []byte) (interface{}, interface{}, common.SendableError)
+	Post(id string, payload []byte) (interface{}, interface{}, server.SendableError)
 }
 
 // State describes the state of a module. It is written to and loaded
@@ -48,7 +47,7 @@ type IDEndpoint interface {
 //
 // All funcs are expected to be called in the server thread.
 type State interface {
-	server.SerializableItem
+	server.Serializable
 	// CreateRendererData generates a data object that contains all required data
 	// for the Renderer to rebuild its state. The returned data object will
 	// be handed over to the renderer's RebuildState. For thread safety, it should

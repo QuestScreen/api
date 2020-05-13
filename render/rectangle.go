@@ -1,6 +1,6 @@
 package render
 
-import "github.com/QuestScreen/api/common"
+import "github.com/QuestScreen/api/colors"
 
 // Rectangle describes a positioned rectangle.
 //
@@ -14,26 +14,20 @@ type Rectangle struct {
 
 // Translation returns the transformation needed to move an object centered on
 // the origin to the center of the rectangle.
-func (r *Rectangle) Translation() Transform {
-	ret := Identity()
-	ret.Translate(float64(r.X)+float64(r.Width)/2.0,
+func (r Rectangle) Translation() Transform {
+	return Identity().Translate(float64(r.X)+float64(r.Width)/2.0,
 		float64(r.Y)+float64(r.Height)/2.0)
-	return ret
 }
 
 // Move moves the rectangle by the given delta
-func (r *Rectangle) Move(dx, dy int32) {
-	r.X += dx
-	r.Y += dy
+func (r Rectangle) Move(dx, dy int32) Rectangle {
+	return Rectangle{r.X + dx, r.Y + dy, r.Width, r.Height}
 }
 
 // Shrink removes dw from the rectangles width and dh from its height,
 // repositioning it so that the center stays the same.
-func (r *Rectangle) Shrink(dw, dh int32) {
-	r.X += dw / 2
-	r.Y += dh / 2
-	r.Width -= dw
-	r.Height -= dh
+func (r Rectangle) Shrink(dw, dh int32) Rectangle {
+	return Rectangle{r.X + dw/2, r.Y + dh/2, r.Width - dw, r.Height - dh}
 }
 
 // HAlign defines horizontal alignment
@@ -69,7 +63,7 @@ const (
 //
 // giving HStretch and VStretch will override the given width and height
 // respectively, the other positioning flags will only set the position.
-func (r *Rectangle) Position(width, height int32, horiz HAlign,
+func (r Rectangle) Position(width, height int32, horiz HAlign,
 	vert VAlign) Rectangle {
 	ret := Rectangle{Width: width, Height: height}
 	switch horiz {
@@ -100,32 +94,33 @@ func (r *Rectangle) Position(width, height int32, horiz HAlign,
 // Carve removes a rectangle of the given length starting at the given edge
 // from the current rectangle.
 //
-// edge must be North, East, South or West.
-// The carved rectangle is removed from the current rectangle and then returned
-func (r *Rectangle) Carve(edge Directions, length int32) Rectangle {
+// edge must be North, East, South or West. The carved rectangle is returned
+// as `carved`, the remaining rectangle as `rest`
+func (r Rectangle) Carve(edge Directions,
+	length int32) (carved Rectangle, rest Rectangle) {
 	switch edge {
 	case North:
 		r.Height -= length
-		return Rectangle{X: r.X, Y: r.Y + r.Height, Width: r.Width, Height: length}
+		return r, Rectangle{X: r.X, Y: r.Y + r.Height, Width: r.Width, Height: length}
 	case East:
 		r.Width -= length
-		return Rectangle{X: r.X + r.Width, Y: r.Y, Width: length, Height: r.Height}
+		return r, Rectangle{X: r.X + r.Width, Y: r.Y, Width: length, Height: r.Height}
 	case South:
 		r.Height -= length
 		ret := Rectangle{X: r.X, Y: r.Y, Width: r.Width, Height: length}
 		r.Y += length
-		return ret
+		return r, ret
 	case West:
 		r.Width -= length
 		ret := Rectangle{X: r.X, Y: r.Y, Width: length, Height: r.Height}
 		r.X += length
-		return ret
+		return r, ret
 	default:
 		panic("illegal edge (must be North, East, South or West)")
 	}
 }
 
 // Fill fills the rectangle with the given color.
-func (r *Rectangle) Fill(renderer Renderer, color common.RGBAColor) {
+func (r Rectangle) Fill(renderer Renderer, color colors.RGBA) {
 	renderer.FillRect(r.Width, r.Height, r.Translation(), color)
 }
