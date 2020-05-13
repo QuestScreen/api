@@ -17,6 +17,13 @@ type Background struct {
 	TextureIndex int  `json:"textureIndex"`
 }
 
+// NewBackground creates a new Background having the given primary color
+// and no texture. This can be used for the default config of a module, since
+// it requires *Background (and RGBA.AsBackground does provide Background).
+func NewBackground(primary RGBA) *Background {
+	return &Background{Primary: primary, TextureIndex: -1}
+}
+
 // LoadWeb loads a background from a json input
 // `{"primary": <rgb>, "secondary": <rgb>, "textureIndex": <number>}`
 func (b *Background) LoadWeb(
