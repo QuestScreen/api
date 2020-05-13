@@ -2,9 +2,9 @@ package fonts
 
 import (
 	"encoding/json"
-	"image/color"
 	"log"
 
+	"github.com/QuestScreen/api/colors"
 	"github.com/QuestScreen/api/server"
 	"gopkg.in/yaml.v3"
 )
@@ -12,24 +12,24 @@ import (
 // Config is a config.Item that allows the user to select a font family, size,
 // style and color.
 type Config struct {
-	FamilyIndex int        `json:"familyIndex"`
-	Size        Size       `json:"size"`
-	Style       Style      `json:"style"`
-	Color       color.RGBA `json:"color"`
+	FamilyIndex int         `json:"familyIndex"`
+	Size        Size        `json:"size"`
+	Style       Style       `json:"style"`
+	Color       colors.RGBA `json:"color"`
 }
 
 type persistedFont struct {
-	Family string     `yaml:"family"`
-	Size   Size       `yaml:"size"`
-	Style  Style      `yaml:"style"`
-	Color  color.RGBA `yaml:"color"`
+	Family string      `yaml:"family"`
+	Size   Size        `yaml:"size"`
+	Style  Style       `yaml:"style"`
+	Color  colors.RGBA `yaml:"color"`
 }
 
 type webFont struct {
 	FamilyIndex server.ValidatedInt `json:"familyIndex"`
 	Size        server.ValidatedInt `json:"size"`
 	Style       server.ValidatedInt `json:"style"`
-	Color       color.RGBA          `json:"color"`
+	Color       colors.RGBA         `json:"color"`
 }
 
 // LoadWeb loads a font from a json input
