@@ -1,6 +1,9 @@
 package server
 
-import "github.com/QuestScreen/api/resources"
+import (
+	"github.com/QuestScreen/api/groups"
+	"github.com/QuestScreen/api/resources"
+)
 
 // Context gives access to data available in the server thread.
 // This is a read-only view of data required for serialization and state
@@ -12,8 +15,7 @@ type Context interface {
 	resources.Provider
 	NumFontFamilies() int
 	FontFamilyName(index int) string
-	NumHeroes() int
-	HeroID(index int) string
+	ActiveGroup() groups.Group
 }
 
 // MessageSender is used to send warnings and errors issued at startup to the

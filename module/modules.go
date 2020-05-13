@@ -3,7 +3,7 @@ package module
 import (
 	"time"
 
-	"github.com/QuestScreen/api/group"
+	"github.com/QuestScreen/api/groups"
 	"github.com/QuestScreen/api/render"
 	"github.com/QuestScreen/api/resources"
 	"github.com/QuestScreen/api/server"
@@ -52,14 +52,15 @@ type State interface {
 	// for the Renderer to rebuild its state. The returned data object will
 	// be handed over to the renderer's RebuildState. For thread safety, it should
 	// not be a pointer into the ModuleState object.
-	CreateRendererData() interface{}
+	CreateRendererData(ctx server.Context) interface{}
 }
 
 // HeroAwareState is an interface that must be implemented by module
 // states if they work with heroes. It lets the application send messages to the
 // state when the list of heroes changes.
 type HeroAwareState interface {
-	HeroListChanged(heroes group.HeroList, action group.HeroChangeAction, heroIndex int)
+	HeroListChanged(
+		ctx server.Context, action groups.HeroChangeAction, heroIndex int)
 }
 
 // PureEndpointProvider is a State extension for modules whose

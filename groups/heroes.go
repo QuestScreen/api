@@ -1,4 +1,4 @@
-package group
+package groups
 
 // Hero describes a hero (player character).
 type Hero interface {
