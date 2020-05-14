@@ -3,7 +3,7 @@ package api
 import (
 	"encoding/json"
 
-	"github.com/QuestScreen/api/module"
+	"github.com/QuestScreen/api/modules"
 )
 
 // SystemTemplate is a template to create a system from.
@@ -56,7 +56,7 @@ type Plugin struct {
 	// Name returns the name of the plugin.
 	Name string
 	// Modules returns the list of modules provided by this plugin.
-	Modules []*module.Module
+	Modules []*modules.Module
 	// AdditionalJS returns JavaScript source needed to support the
 	// plugin's modules on the client side.
 	AdditionalJS []byte
