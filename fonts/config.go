@@ -35,7 +35,7 @@ type webFont struct {
 // LoadWeb loads a font from a json input
 // `{"familyIndex": <number>, "size": <number>, "style": <number>}`
 func (f *Config) LoadWeb(
-	input json.RawMessage, ctx server.Context) server.SendableError {
+	input json.RawMessage, ctx server.Context) server.Error {
 	tmp := webFont{
 		FamilyIndex: server.ValidatedInt{Min: 0, Max: ctx.NumFontFamilies() - 1},
 		Size:        server.ValidatedInt{Min: 0, Max: int(Huge)},

@@ -30,7 +30,7 @@ type PureEndpoint interface {
 	// If an error is returned, InitTransition will not be called and both return
 	// values will be ignored. The server will the respond according to the cause
 	// of the returned error.
-	Post(payload []byte) (interface{}, interface{}, server.SendableError)
+	Post(payload []byte) (interface{}, interface{}, server.Error)
 }
 
 // IDEndpoint is an endpoint of a module for the HTTP server.
@@ -39,7 +39,7 @@ type PureEndpoint interface {
 type IDEndpoint interface {
 	// Post works analoguous to ModulePureEndpoint.Post, but gets the id from the
 	// request URL path as additional parameter.
-	Post(id string, payload []byte) (interface{}, interface{}, server.SendableError)
+	Post(id string, payload []byte) (interface{}, interface{}, server.Error)
 }
 
 // State describes the state of a module. It is written to and loaded

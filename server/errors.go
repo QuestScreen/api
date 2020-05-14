@@ -4,11 +4,11 @@ import (
 	"net/http"
 )
 
-// SendableError is an error that can be sent as HTTP response.
+// Error is an error that can be sent as HTTP response.
 //
 // This is used as error type on funcs that are invoked as part of handling an
 // HTTP request.
-type SendableError interface {
+type Error interface {
 	error
 	StatusCode() int
 }

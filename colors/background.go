@@ -27,7 +27,7 @@ func NewBackground(primary RGBA) *Background {
 // LoadWeb loads a background from a json input
 // `{"primary": <rgb>, "secondary": <rgb>, "textureIndex": <number>}`
 func (b *Background) LoadWeb(
-	input json.RawMessage, ctx server.Context) server.SendableError {
+	input json.RawMessage, ctx server.Context) server.Error {
 	textures := ctx.GetTextures()
 	value := struct {
 		Primary      RGBA                `json:"primary"`
