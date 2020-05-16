@@ -15,8 +15,8 @@ type Rectangle struct {
 // Translation returns the transformation needed to move an object centered on
 // the origin to the center of the rectangle.
 func (r Rectangle) Translation() Transform {
-	return Identity().Translate(float64(r.X)+float64(r.Width)/2.0,
-		float64(r.Y)+float64(r.Height)/2.0)
+	return Identity().Translate(float64(r.X)+float64(r.Width),
+		float64(r.Y)+float64(r.Height))
 }
 
 // Move moves the rectangle by the given delta
