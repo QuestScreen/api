@@ -15,8 +15,18 @@ type Image struct {
 
 // IsEmpty tests whether the image is empty
 // (i.e. does not link to an OpenGL texture)
-func (i *Image) IsEmpty() bool {
+func (i Image) IsEmpty() bool {
 	return i.Width == 0
+}
+
+// Draw draws the image to the given coordinates. (x,y) designates the lower
+// left corner of the image.
+func (i Image) Draw(r Renderer, x, y int32, alpha uint8) {
+	w, h := float32(i.Width), float32(i.Height)
+	t := Identity().Translate(float32(x)+w/2.0,
+		float32(y)+h/2.0).Scale(w, h)
+
+	r.DrawImage(i, t, alpha)
 }
 
 // Renderer describes an object providing functions for rendering objects.
@@ -37,11 +47,17 @@ type Renderer interface {
 	//
 	// Font sizes depend directly on this size.
 	Unit() int32
-	// FillRect fills the rectangle with the specified dimensions with the
-	// specified color. The rectangle is positions via the given transformation.
-	FillRect(width, height int32, t Transform, color colors.RGBA)
-	// DrawImage renders the given image if it is not empty, using the given
+	// FillRect fills a rectangle with the specified color.
+	// The rectangle is a square with edge length of 1.0 centered around the
+	// origin, transformed with the given transformation.
+	//
+	// For the high-level API, use Rectangle's Fill() instead.
+	FillRect(t Transform, color colors.RGBA)
+	// DrawImage renders the given image if it is not empty on a square with
+	// edge length of 1.0 centered around the origin, transformed with the given
 	// transformation. alpha modifies the image's opacity.
+	//
+	// For the high-level API, use Image's Draw() instead.
 	DrawImage(image Image, t Transform, alpha uint8)
 	// RenderText renders the given text with the given font into an image with
 	// transparent background.

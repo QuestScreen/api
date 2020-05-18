@@ -3,7 +3,7 @@ package render
 import "math"
 
 // Transform encodes a 2D affine transformation matrix
-type Transform [6]float64
+type Transform [6]float32
 
 // Identity returns the identity transformation
 func Identity() Transform {
@@ -12,7 +12,7 @@ func Identity() Transform {
 
 // Translate adds a translation to the transformation.
 // A translation moves by (x,y).
-func (t Transform) Translate(x float64, y float64) Transform {
+func (t Transform) Translate(x float32, y float32) Transform {
 	t[4] += x
 	t[5] += y
 	return t
@@ -20,16 +20,16 @@ func (t Transform) Translate(x float64, y float64) Transform {
 
 // Rotate adds a rotation to the transformation.
 // The given angle is in radian.
-func (t Transform) Rotate(angle float64) Transform {
-	s := math.Sin(angle)
-	c := math.Cos(angle)
+func (t Transform) Rotate(angle float32) Transform {
+	s := float32(math.Sin(float64(angle)))
+	c := float32(math.Cos(float64(angle)))
 	return Transform{
 		c*t[0] + s*t[2], s*t[3] + c*t[1],
 		c*t[2] - s*t[0], c*t[3] - s*t[1], t[4], t[5]}
 }
 
 // Scale adds scaling to the transformation.
-func (t Transform) Scale(x float64, y float64) Transform {
+func (t Transform) Scale(x float32, y float32) Transform {
 	return Transform{
 		t[0] * x, t[1] * x, t[2] * y, t[3] * y, t[4], t[5]}
 }

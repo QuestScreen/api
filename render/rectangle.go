@@ -2,10 +2,15 @@ package render
 
 import "github.com/QuestScreen/api/colors"
 
-// Rectangle describes a positioned rectangle.
+// Rectangle describes a rectangle positioned on the screen.
 //
-// This can be used as intermediate structure for positioning stuff,
-// to avoid having to deal with Transform's float64 values too much.
+// The screen coordinates are (0,0) at the lower left corner and
+// (width, height) at the upper right corner.
+//
+// Rectangle is the high-level API for positioning stuff on the screen.
+// It provides functionality to position one rectangle in another one and so on.
+// You can use it in conjunction with the lower-level Transform API which can
+// do rotations by using Rectangle's Translation() / Transformation() funcs.
 type Rectangle struct {
 	// coordinate of the lower left corner
 	X, Y          int32
@@ -15,8 +20,14 @@ type Rectangle struct {
 // Translation returns the transformation needed to move an object centered on
 // the origin to the center of the rectangle.
 func (r Rectangle) Translation() Transform {
-	return Identity().Translate(float64(r.X)+float64(r.Width)/2.0,
-		float64(r.Y)+float64(r.Height)/2.0)
+	return Identity().Translate(float32(r.X)+float32(r.Width)/2.0,
+		float32(r.Y)+float32(r.Height)/2.0)
+}
+
+// Transformation returns the transformation needed to transform a square with
+// edge length of 1.0 centered around the origin to the subject rectangle.
+func (r Rectangle) Transformation() Transform {
+	return r.Translation().Scale(float32(r.Width), float32(r.Height))
 }
 
 // Move moves the rectangle by the given delta
@@ -122,5 +133,5 @@ func (r Rectangle) Carve(edge Directions,
 
 // Fill fills the rectangle with the given color.
 func (r Rectangle) Fill(renderer Renderer, color colors.RGBA) {
-	renderer.FillRect(r.Width, r.Height, r.Translation(), color)
+	renderer.FillRect(r.Transformation(), color)
 }
