@@ -19,14 +19,10 @@ func (i Image) IsEmpty() bool {
 	return i.Width == 0
 }
 
-// Draw draws the image to the given coordinates. (x,y) designates the lower
-// left corner of the image.
-func (i Image) Draw(r Renderer, x, y int32, alpha uint8) {
-	w, h := float32(i.Width), float32(i.Height)
-	t := Identity().Translate(float32(x)+w/2.0,
-		float32(y)+h/2.0).Scale(w, h)
-
-	r.DrawImage(i, t, alpha)
+// Draw draws the image to the given rectangular area.
+// The image will be stretched to fit the whole area.
+func (i Image) Draw(r Renderer, area Rectangle, alpha uint8) {
+	r.DrawImage(i, area.Transformation(), alpha)
 }
 
 // Renderer describes an object providing functions for rendering objects.
