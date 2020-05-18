@@ -11,6 +11,18 @@ import (
 type Image struct {
 	TextureID     uint32
 	Width, Height int32
+	// Flipped describes the row order in the image data.
+	//   true  -> first datapoint in image data is upper left corner.
+	//   false -> first datapoint in image data is lower left corner.
+	// This is used because loading image files returns the top row first,
+	// while internally OpenGL places the bottom row first (e.g. when rendering
+	// to a texture).
+	Flipped bool
+}
+
+// EmptyImage returns an image that has no linked OpenGL texture.
+func EmptyImage() Image {
+	return Image{}
 }
 
 // IsEmpty tests whether the image is empty
