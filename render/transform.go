@@ -13,8 +13,8 @@ func Identity() Transform {
 // Translate adds a translation to the transformation.
 // A translation moves by (x,y).
 func (t Transform) Translate(x float32, y float32) Transform {
-	t[4] += x
-	t[5] += y
+	t[4] = t[0]*x + t[2]*y + t[4]
+	t[5] = t[1]*x + t[3]*y + t[5]
 	return t
 }
 
@@ -45,7 +45,7 @@ func (t Transform) Invert() Transform {
 // Compose adds the given transformation to the current transformation
 func (t Transform) Compose(other Transform) Transform {
 	return Transform{
-		other[0]*t[0] + other[1]*t[2], other[1]*t[3] + other[0]*t[1],
-		other[2]*t[0] + other[3]*t[2], other[3]*t[3] + other[2]*t[1],
-		other[4]*t[0] + other[5]*t[2] + t[4], other[5]*t[3] + other[4]*t[1] + t[5]}
+		other[0]*t[0] + other[1]*t[2], other[0]*t[1] + other[1]*t[3],
+		other[2]*t[0] + other[3]*t[2], other[2]*t[1] + other[3]*t[3],
+		other[4]*t[0] + other[5]*t[2] + t[4], other[4]*t[1] + other[5]*t[3] + t[5]}
 }
