@@ -121,24 +121,21 @@ func (r Rectangle) Carve(edge Directions,
 	length int32) (carved Rectangle, rest Rectangle) {
 	switch edge {
 	case North:
-		r.Height -= length
-		return r, Rectangle{X: r.X, Y: r.Y + r.Height, Width: r.Width, Height: length}
+		rest = Rectangle{X: r.X, Y: r.Y, Width: r.Width, Height: r.Height - length}
+		carved = Rectangle{X: r.X, Y: r.Y + rest.Height, Width: r.Width, Height: length}
 	case East:
-		r.Width -= length
-		return r, Rectangle{X: r.X + r.Width, Y: r.Y, Width: length, Height: r.Height}
+		rest = Rectangle{X: r.X, Y: r.Y, Width: r.Width - length, Height: r.Height}
+		carved = Rectangle{X: r.X + rest.Width, Y: r.Y, Width: length, Height: r.Height}
 	case South:
-		r.Height -= length
-		ret := Rectangle{X: r.X, Y: r.Y, Width: r.Width, Height: length}
-		r.Y += length
-		return r, ret
+		rest = Rectangle{X: r.X, Y: r.Y + length, Width: r.Width, Height: r.Height - length}
+		carved = Rectangle{X: r.X, Y: r.Y, Width: r.Width, Height: length}
 	case West:
-		r.Width -= length
-		ret := Rectangle{X: r.X, Y: r.Y, Width: length, Height: r.Height}
-		r.X += length
-		return r, ret
+		rest = Rectangle{X: r.X + length, Y: r.Y, Width: r.Width - length, Height: r.Height}
+		carved = Rectangle{X: r.X, Y: r.Y, Width: length, Height: r.Height}
 	default:
 		panic("illegal edge (must be North, East, South or West)")
 	}
+	return
 }
 
 // Fill fills the rectangle with the given color.
