@@ -41,6 +41,16 @@ func (r Rectangle) Shrink(dw, dh int32) Rectangle {
 	return Rectangle{r.X + dw/2, r.Y + dh/2, r.Width - dw, r.Height - dh}
 }
 
+// Scale scales the rectangle's width and height by the given factor,
+// repositioning it so that the center stays the same.
+func (r Rectangle) Scale(factor float32) Rectangle {
+	ret := Rectangle{Width: int32(float32(r.Width) * factor),
+		Height: int32(float32(r.Height) * factor)}
+	ret.X = r.X + (r.Width-ret.Width)/2
+	ret.Y = r.Y + (r.Height-ret.Height)/2
+	return ret
+}
+
 // HAlign defines horizontal alignment
 type HAlign int
 
