@@ -78,7 +78,8 @@ type Renderer interface {
 	// Returns an empty image if it wasn't able to create the texture.
 	RenderText(text string, font fonts.Config) Image
 	// CreateCanvas creates a canvas to draw content into, and fills it with the
-	// given background.
+	// given background. The returned content rectangle is the canvas area minus
+	// the borders.
 	//
 	// Borders are added in each given direction. Border width/height is added to
 	// the given innerWidth / innerHeight values.
@@ -87,7 +88,7 @@ type Renderer interface {
 	// primary color has an alpha value other than 255, or if a mask is set and
 	// the secondary color has an alpha value other than 255.
 	CreateCanvas(innerWidth, innerHeight int32, bg colors.Background,
-		borders Directions) Canvas
+		borders Directions) (canvas Canvas, content Rectangle)
 	// LoadImageFile loads an image file from the specified path.
 	// if an error is returned, the returned image is empty.
 	LoadImageFile(path string) (Image, error)
