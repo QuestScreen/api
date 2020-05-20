@@ -8,16 +8,22 @@ import (
 // Image is a rectangular image stored as OpenGL texture
 // `id` is the name of an OpenGL texture iff width!=0.
 // any Image width width==0 is considered the empty image.
+//
+// In the context of this API, this type should be considered opaque with only
+// Width and Height being read-accessible. The fields are public so that plugins
+// can use the data for custom OpenGL processing.
 type Image struct {
 	TextureID     uint32
 	Width, Height int32
 	// Flipped describes the row order in the image data.
-	//   true  -> first datapoint in image data is upper left corner.
-	//   false -> first datapoint in image data is lower left corner.
+	//   true  -> first datapoint in image data is lower left corner.
+	//   false -> first datapoint in image data is upper left corner.
 	// This is used because loading image files returns the top row first,
 	// while internally OpenGL places the bottom row first (e.g. when rendering
 	// to a texture).
 	Flipped bool
+	// true iff the texture has an alpha channel.
+	HasAlpha bool
 }
 
 // EmptyImage returns an image that has no linked OpenGL texture.
@@ -76,6 +82,10 @@ type Renderer interface {
 	//
 	// Borders are added in each given direction. Border width/height is added to
 	// the given innerWidth / innerHeight values.
+	//
+	// The texture created by the canvas will have an alpha channel only if the
+	// primary color has an alpha value other than 255, or if a mask is set and
+	// the secondary color has an alpha value other than 255.
 	CreateCanvas(innerWidth, innerHeight int32, bg colors.Background,
 		borders Directions) Canvas
 	// LoadImageFile loads an image file from the specified path.
