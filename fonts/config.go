@@ -32,6 +32,11 @@ type webFont struct {
 	Color       colors.RGBA         `json:"color"`
 }
 
+// Name returns "core:Font"
+func (f *Config) Name() string {
+	return "core:Font"
+}
+
 // LoadWeb loads a font from a json input
 // `{"familyIndex": <number>, "size": <number>, "style": <number>}`
 func (f *Config) LoadWeb(

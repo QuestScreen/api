@@ -24,6 +24,11 @@ func NewBackground(primary RGBA) *Background {
 	return &Background{Primary: primary, TextureIndex: -1}
 }
 
+// Name returns "core:Background"
+func (b *Background) Name() string {
+	return "core:Background"
+}
+
 // LoadWeb loads a background from a json input
 // `{"primary": <rgb>, "secondary": <rgb>, "textureIndex": <number>}`
 func (b *Background) LoadWeb(

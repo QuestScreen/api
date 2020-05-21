@@ -31,4 +31,7 @@ type Item interface {
 	// errors by logging them and setting appropriate default values. An error
 	// returned from loading Persisted data will lead to the app to exit.
 	LoadPersisted(input *yaml.Node, ctx server.Context) error
+	// Name returns the static name of an Item implementation. It is used to
+	// link it to its GUI in the web interface.
+	Name() string
 }
