@@ -91,10 +91,19 @@ type Renderer interface {
 		borders Directions) (canvas Canvas, content Rectangle)
 	// LoadImageFile loads an image file from the specified path.
 	// if an error is returned, the returned image is empty.
-	LoadImageFile(path string) (Image, error)
+	//
+	// if scaleDownToOutput is true, the image is scaled down to the output
+	// context's dimensions so that it completely fits into the display while
+	// preserving aspect ratio.
+	//
+	// The image will always be scaled down to GL_MAX_TEXTURE_SIZE if its
+	// dimensions exceed it.
+	LoadImageFile(path string, scaleDownToOutput bool) (Image, error)
 	// LoadImageMem loads an image from data in memory.
 	// if an error is returned, the returned image is empty.
-	LoadImageMem(data []byte) (Image, error)
+	//
+	// scaleDownToOutput work like for LoadImageFile.
+	LoadImageMem(data []byte, scaleDownToOutput bool) (Image, error)
 	// FreeImage destroys the texture associated with the image (if one exists)
 	// and sets i to be the empty image. Does nothing on empty images.
 	FreeImage(i *Image)
