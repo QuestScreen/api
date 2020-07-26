@@ -64,8 +64,8 @@ type App interface {
 	// returns an error if given nil or if the given item's ID is already in use
 	// by another item.
 	RegisterConfigItem(item *ConfigItem) error
-	// RegisterModuleState registers the given module state with the app.
+	// RegisterModule registers the given module with the app.
 	// returns an error if given nil or if the given item's ID is already in use
 	// by another item.
-	RegisterModuleState(item *ModuleState) error
+	RegisterModule(item *Module) error
 }
