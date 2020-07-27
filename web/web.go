@@ -84,6 +84,7 @@ type ServerState interface {
 type GroupData interface {
 	NumHeroes() int
 	HeroName(index int) string
+	HeroID(index int) string
 }
 
 // ModuleState is the API of a module's state.
