@@ -94,7 +94,7 @@ type GroupData interface {
 type ModuleState interface {
 	// UI generates the user interface of the ModuleState.
 	// This method is called exactly once per ModuleState instance.
-	UI(group GroupData) runtime.Component
+	UI() runtime.Component
 }
 
 // Module describes a module type.
@@ -103,7 +103,7 @@ type Module struct {
 	ID string
 	// Load creates a new ModuleState from the given JSON message, which must not
 	// be nil. server will be a ServerState with base path "/<plugin>/<module>"
-	Load func(data *json.RawMessage, server ServerState) (ModuleState, error)
+	Load func(data *json.RawMessage, server ServerState, group GroupData) (ModuleState, error)
 }
 
 // PluginRegistrator is the interface for registering ConfigItems and Modules
