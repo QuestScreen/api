@@ -80,6 +80,12 @@ type ServerState interface {
 	Fetch(method RequestMethod, subpath string, payload interface{}, target interface{})
 }
 
+// GroupData gives access to data of the current group shared between modules.
+type GroupData interface {
+	NumHeroes() int
+	HeroName(index int) string
+}
+
 // ModuleState is the API of a module's state.
 // A ModuleState acts independenly, communicating with the server on its own
 // to communicate changes. the only interface to the main application is the
@@ -87,7 +93,7 @@ type ServerState interface {
 type ModuleState interface {
 	// UI generates the user interface of the ModuleState.
 	// This method is called exactly once per ModuleState instance.
-	UI() runtime.Component
+	UI(group GroupData) runtime.Component
 }
 
 // Module describes a module type.
