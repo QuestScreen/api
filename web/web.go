@@ -29,15 +29,8 @@ type ConfigItemState interface {
 	Data() interface{}
 }
 
-// ConfigItem describes a ConfigItem type.
-type ConfigItem struct {
-	// ID is the identifier of this ConfigItem type and must be unique among all
-	// ConfigItem instances.
-	ID string
-	// Load creates a state from the given JSON subtree.
-	// data may be nil in which case default values must be loaded.
-	Load func(data *json.RawMessage) (ConfigItemState, error)
-}
+// ConfigItemConstructor constructs a configuration item's state.
+type ConfigItemConstructor func(data json.RawMessage) (ConfigItemState, error)
 
 // RequestMethod is an enum of known methods for Fetch.
 type RequestMethod int
@@ -97,24 +90,16 @@ type ModuleState interface {
 	UI() runtime.Component
 }
 
-// Module describes a module type.
-type Module struct {
-	// ID is the identifier of this Module, unique within the owning plugin.
-	ID string
-	// Load creates a new ModuleState from the given JSON message, which must not
-	// be nil. server will be a ServerState with base path "/<plugin>/<module>"
-	Load func(data json.RawMessage, server ServerState, group GroupData) (ModuleState, error)
-}
+// ModuleConstructor creates a module instance's state
+type ModuleConstructor func(data json.RawMessage, server ServerState, group GroupData) (ModuleState, error)
 
 // PluginRegistrator is the interface for registering ConfigItems and Modules
 // of a plugin during app initialization.
 type PluginRegistrator interface {
-	// RegisterConfigItem registers the given config item with the app.
-	// returns an error if given nil or if the given item's ID is already in use
-	// by another item.
-	RegisterConfigItem(item *ConfigItem) error
-	// RegisterModule registers the given module with the app.
-	// returns an error if given nil or if the given item's ID is already in use
-	// by another item.
-	RegisterModule(item *Module) error
+	// RegisterConfigItem registers a config item with the given id.
+	// returns an error if the id is already in use by another item.
+	RegisterConfigItem(id string, constructor ConfigItemConstructor) error
+	// RegisterModule registers a module with the given id.
+	// returns an error if the given item's ID is already in use by another item.
+	RegisterModule(id string, constructor ModuleConstructor) error
 }
