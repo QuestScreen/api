@@ -103,7 +103,7 @@ type Module struct {
 	ID string
 	// Load creates a new ModuleState from the given JSON message, which must not
 	// be nil. server will be a ServerState with base path "/<plugin>/<module>"
-	Load func(data *json.RawMessage, server ServerState, group GroupData) (ModuleState, error)
+	Load func(data json.RawMessage, server ServerState, group GroupData) (ModuleState, error)
 }
 
 // PluginRegistrator is the interface for registering ConfigItems and Modules
