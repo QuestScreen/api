@@ -19,11 +19,11 @@ type Item interface {
 	// LoadWeb loads the item's state from JSON data that as been
 	// sent from the web client.
 	//
-	// Any structural and value error should result in returning a server.Error
-	// (typically a *BadRequest) and should not alter the item's state.
+	// Any structural and value error should result in returning an error
+	// and should not alter the item's state.
 	// Implementation should typically use the ReceiveData func, possibly together
-	// with the strict ValidatedX types provided by the api package.
-	LoadWeb(input json.RawMessage, ctx server.Context) server.Error
+	// with the strict ValidatedX types provided by the comms package.
+	LoadWeb(input json.RawMessage, ctx server.Context) error
 	// LoadPersisted loads the item's state from YAML data that has been
 	// read from the file system.
 	//
@@ -31,7 +31,4 @@ type Item interface {
 	// errors by logging them and setting appropriate default values. An error
 	// returned from loading Persisted data will lead to the app to exit.
 	LoadPersisted(input *yaml.Node, ctx server.Context) error
-	// Name returns the static name of an Item implementation. It is used to
-	// link it to its GUI in the web interface.
-	Name() string
 }

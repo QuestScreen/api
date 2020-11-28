@@ -11,9 +11,7 @@ type Resource interface {
 	Path() string
 }
 
-// Provider is the interface to files on the file system that have been
-// selected by a module's ResourceSelectors. Resources are read-only and
-// available on both server and display thread.
+// Provider is the interface for querying resources.
 type Provider interface {
 	// GetResources queries the list of available resources of the given
 	// resource collection index.

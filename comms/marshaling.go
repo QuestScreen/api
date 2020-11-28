@@ -1,4 +1,4 @@
-package server
+package comms
 
 import (
 	"bytes"
@@ -8,13 +8,12 @@ import (
 	"reflect"
 )
 
-// ReceiveData loads JSON input into a target object and wraps errors in
-// BadRequest objects.
-func ReceiveData(input []byte, target interface{}) *BadRequest {
+// ReceiveData loads JSON input into a target object.
+func ReceiveData(input []byte, target interface{}) error {
 	decoder := json.NewDecoder(bytes.NewReader(input))
 	decoder.DisallowUnknownFields()
 	if err := decoder.Decode(target); err != nil {
-		return &BadRequest{Message: "error in JSON structure", Inner: err}
+		return errors.New("error in JSON structure: " + err.Error())
 	}
 	return nil
 }

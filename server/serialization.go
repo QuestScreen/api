@@ -1,6 +1,6 @@
 package server
 
-// Serializable describes an item that can be serialized.
+// Serializable describes a server item that can be serialized.
 // Serialization happens both when the item is sent to a client via the Web API,
 // and when the item is persisted to the file system.
 //
@@ -8,6 +8,10 @@ package server
 // web client, and one for persisting it to the file system. Both
 // implementations may trivially return a pointer to the item itself, if no
 // special handling is required.
+//
+// On the client, all items received from and sent to the server are directly
+// (de)serialized using the json package; this interface is only for server
+// items that may provide a modified view for the client and/or for persisting.
 type Serializable interface {
 	// WebView returns a view of the data structure as it should be sent to the
 	// web client.

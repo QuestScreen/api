@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 
+	"github.com/QuestScreen/api/comms"
 	"github.com/QuestScreen/api/server"
 	"gopkg.in/yaml.v3"
 )
@@ -26,20 +27,20 @@ func NewBackground(primary RGBA) *Background {
 
 // Name returns "core:Background"
 func (b *Background) Name() string {
-	return "core:Background"
+	return "Background"
 }
 
 // LoadWeb loads a background from a json input
 // `{"primary": <rgb>, "secondary": <rgb>, "textureIndex": <number>}`
 func (b *Background) LoadWeb(
-	input json.RawMessage, ctx server.Context) server.Error {
+	input json.RawMessage, ctx server.Context) error {
 	textures := ctx.GetTextures()
 	value := struct {
-		Primary      RGBA                `json:"primary"`
-		Secondary    RGBA                `json:"secondary"`
-		TextureIndex server.ValidatedInt `json:"textureIndex"`
-	}{TextureIndex: server.ValidatedInt{Min: -1, Max: len(textures) - 1}}
-	if err := server.ReceiveData(input, &value); err != nil {
+		Primary      RGBA               `json:"primary"`
+		Secondary    RGBA               `json:"secondary"`
+		TextureIndex comms.ValidatedInt `json:"textureIndex"`
+	}{TextureIndex: comms.ValidatedInt{Min: -1, Max: len(textures) - 1}}
+	if err := comms.ReceiveData(input, &value); err != nil {
 		return err
 	}
 	*b = Background{Primary: value.Primary,

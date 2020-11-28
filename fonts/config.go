@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/QuestScreen/api/colors"
+	"github.com/QuestScreen/api/comms"
 	"github.com/QuestScreen/api/server"
 	"gopkg.in/yaml.v3"
 )
@@ -26,27 +27,27 @@ type persistedFont struct {
 }
 
 type webFont struct {
-	FamilyIndex server.ValidatedInt `json:"familyIndex"`
-	Size        server.ValidatedInt `json:"size"`
-	Style       server.ValidatedInt `json:"style"`
-	Color       colors.RGBA         `json:"color"`
+	FamilyIndex comms.ValidatedInt `json:"familyIndex"`
+	Size        comms.ValidatedInt `json:"size"`
+	Style       comms.ValidatedInt `json:"style"`
+	Color       colors.RGBA        `json:"color"`
 }
 
-// Name returns "core:Font"
+// Name returns "Font"
 func (f *Config) Name() string {
-	return "core:Font"
+	return "Font"
 }
 
 // LoadWeb loads a font from a json input
 // `{"familyIndex": <number>, "size": <number>, "style": <number>}`
 func (f *Config) LoadWeb(
-	input json.RawMessage, ctx server.Context) server.Error {
+	input json.RawMessage, ctx server.Context) error {
 	tmp := webFont{
-		FamilyIndex: server.ValidatedInt{Min: 0, Max: ctx.NumFontFamilies() - 1},
-		Size:        server.ValidatedInt{Min: 0, Max: int(Huge)},
-		Style:       server.ValidatedInt{Min: 0, Max: int(BoldItalic)},
+		FamilyIndex: comms.ValidatedInt{Min: 0, Max: ctx.NumFontFamilies() - 1},
+		Size:        comms.ValidatedInt{Min: 0, Max: int(Huge)},
+		Style:       comms.ValidatedInt{Min: 0, Max: int(BoldItalic)},
 	}
-	if err := server.ReceiveData(input, &tmp); err != nil {
+	if err := comms.ReceiveData(input, &tmp); err != nil {
 		return err
 	}
 	*f = Config{FamilyIndex: tmp.FamilyIndex.Value,
