@@ -1,4 +1,4 @@
-package colors
+package api
 
 import (
 	"encoding/hex"
@@ -26,13 +26,6 @@ func (c RGB) WithAlpha(alpha uint8) RGBA {
 	return RGBA{R: c.R, G: c.G, B: c.B, A: alpha}
 }
 
-// AsBackground returns a Background with this color as background and no
-// texture set.
-func (c RGB) AsBackground() Background {
-	return Background{
-		Primary: c.WithAlpha(255), TextureIndex: -1}
-}
-
 // UnmarshalJSON loads a JSON string as HTML hexcode into RGBColor
 func (c *RGB) UnmarshalJSON(data []byte) error {
 	var s string
@@ -55,12 +48,6 @@ func (c *RGB) MarshalJSON() ([]byte, error) {
 	bytes := [3]byte{c.R, c.G, c.B}
 	s := "#" + hex.EncodeToString(bytes[:])
 	return json.Marshal(&s)
-}
-
-// AsBackground returns a Background with this color as background and no
-// texture set.
-func (c RGBA) AsBackground() Background {
-	return Background{Primary: c, TextureIndex: -1}
 }
 
 // UnmarshalJSON loads a JSON string as HTML hexcode into RGBAColor

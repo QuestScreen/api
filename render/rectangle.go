@@ -1,6 +1,6 @@
 package render
 
-import "github.com/QuestScreen/api/colors"
+import "github.com/QuestScreen/api"
 
 // Rectangle describes a rectangle positioned on the screen.
 //
@@ -139,6 +139,6 @@ func (r Rectangle) Carve(edge Directions,
 }
 
 // Fill fills the rectangle with the given color.
-func (r Rectangle) Fill(renderer Renderer, color colors.RGBA) {
+func (r Rectangle) Fill(renderer Renderer, color api.RGBA) {
 	renderer.FillRect(r.Transformation(), color)
 }

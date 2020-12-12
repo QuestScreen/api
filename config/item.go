@@ -1,5 +1,3 @@
-// Package config defines the interface of a data item that is part of a
-// module's configuration.
 package config
 
 import (
