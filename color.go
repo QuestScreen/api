@@ -85,3 +85,16 @@ type Background struct {
 	Secondary    RGBA `json:"secondary"`
 	TextureIndex int  `json:"textureIndex"`
 }
+
+// AsBackground returns a Background with c as background color and no texture.
+func (c RGB) AsBackground() Background {
+	return Background{
+		Primary: c.WithAlpha(255), TextureIndex: -1}
+}
+
+// AsBackground returns a Background with c as background color and no texture.
+func (c RGBA) AsBackground() Background {
+	return Background{
+		Primary: c, TextureIndex: -1,
+	}
+}
