@@ -73,8 +73,7 @@ type Renderer interface {
 	// RenderText renders the given text with the given font into an image with
 	// transparent background.
 	// Returns an empty image if it wasn't able to create the texture.
-	RenderText(text string, fontFamily int, size api.FontSize,
-		style api.FontStyle, color api.RGBA) Image
+	RenderText(text string, font api.Font) Image
 	// CreateCanvas creates a canvas to draw content into, and fills it with the
 	// given background. The returned content rectangle is the canvas area minus
 	// the borders.
@@ -85,8 +84,7 @@ type Renderer interface {
 	// The texture created by the canvas will have an alpha channel only if the
 	// primary color has an alpha value other than 255, or if a mask is set and
 	// the secondary color has an alpha value other than 255.
-	CreateCanvas(innerWidth, innerHeight int32,
-		primaryColor, secondaryColor api.RGBA, textureIndex int,
+	CreateCanvas(innerWidth, innerHeight int32, bg api.Background,
 		borders Directions) (canvas Canvas, content Rectangle)
 	// LoadImageFile loads an image file from the specified path.
 	// if an error is returned, the returned image is empty.

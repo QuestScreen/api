@@ -73,3 +73,15 @@ func (c *RGBA) MarshalJSON() ([]byte, error) {
 	s := "#" + hex.EncodeToString(bytes[:])
 	return json.Marshal(&s)
 }
+
+// Background describes how the background of a rectangle should be colored.
+// It defines a primary and secondary color and optionally the index of a
+// texture that should be used to merge the colors.
+//
+// If not texture is specified, the background is drawn using only the Primary
+// color.
+type Background struct {
+	Primary      RGBA `json:"primary"`
+	Secondary    RGBA `json:"secondary"`
+	TextureIndex int  `json:"textureIndex"`
+}

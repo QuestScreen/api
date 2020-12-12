@@ -125,3 +125,11 @@ func (fs FontSize) MarshalYAML() (interface{}, error) {
 		return nil, fmt.Errorf("Unknown font size: %v", fs)
 	}
 }
+
+// Font describes the font used for drawing text.
+type Font struct {
+	FamilyIndex int       `json:"familyIndex"`
+	Size        FontSize  `json:"size"`
+	Style       FontStyle `json:"style"`
+	Color       RGBA      `json:"color"`
+}
