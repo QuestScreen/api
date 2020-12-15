@@ -13,10 +13,12 @@ import (
 // to communicate changes. the only interface to the main application is the
 // generation of its user interface that will be placed onto the state page.
 type State interface {
-	// LoadFrom initializes the state from the given JSON data.
-	// It acts as constructor and discards any previous state.
-	LoadFrom(data json.RawMessage, server server.State, group groups.Group) error
 	// UI generates the user interface of the State.
 	// This method is called exactly once after a successful LoadFrom
 	UI(server server.State) runtime.Component
 }
+
+// Constructor is a function that constructs a state from given JSON input and
+// server/group environment.
+type Constructor func(data json.RawMessage, server server.State,
+	group groups.Group) (State, error)
