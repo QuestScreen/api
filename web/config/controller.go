@@ -28,3 +28,10 @@ type Controller interface {
 	// to update the values of this ConfigItem state on the server side.
 	Data() interface{}
 }
+
+// Item is a named Controller.
+type Item struct {
+	Controller
+	// Name is the name of this config item and will be displayed in the UI.
+	Name string
+}
