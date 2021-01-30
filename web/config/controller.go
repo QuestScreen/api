@@ -33,14 +33,3 @@ type Controller interface {
 	// SetEnabled enables or disables the GUI.
 	SetEnabled(value bool)
 }
-
-// Generator generates a config item controller.
-type Generator func() Item
-
-// Item describes a configuration item.
-// An instance can be generated with the contained generator.
-type Item struct {
-	Generator
-	// Name is the name of this config item and will be displayed in the UI.
-	Name string
-}
