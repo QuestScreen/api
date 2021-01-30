@@ -1,30 +1,25 @@
 package server
 
-// Serializable describes a server item that can be serialized.
-// Serialization happens both when the item is sent to a client via the Web API,
-// and when the item is persisted to the file system.
-//
-// A Serializable item provides two views: One for communicating the item to the
-// web client, and one for persisting it to the file system. Both
-// implementations may trivially return a pointer to the item itself, if no
-// special handling is required.
-//
-// On the client, all items received from and sent to the server are directly
-// (de)serialized using the json package; this interface is only for server
-// items that may provide a modified view for the client and/or for persisting.
-type Serializable interface {
-	// WebView returns a view of the data structure as it should be sent to the
-	// web client.
-	//
-	// The returned view will be serialized as JSON, possibly as part of a
-	// larger structure. If you need to manually serialize the structure, return
-	// a json.RawMessage.
-	WebView(ctx Context) interface{}
+import "gopkg.in/yaml.v3"
 
-	// PersistingView returns a view of the data structure that can be
-	// communicated to the client.
+// Persister describes an object whose state can be persisted into a YAML
+// stream.
+type Persister interface {
+	// Persist returns a view of the data that can be written to persistent
+	// storage in YAML format, possibly as part of a larger structure.
 	//
-	// The returned view will be serialized as YAML as part of a larger structure.
 	// If you need to manually serialize the structure, return a *yaml.Node.
-	PersistingView(ctx Context) interface{}
+	// Generally, if the returned value implements yaml.Marshaler, that will be
+	// used for serialization.
+	Persist(ctx Context) interface{}
+}
+
+// Loader describes an object whose state can be loaded from YAML data.
+type Loader interface {
+	// Load invalidates the Loader's state and replaces it with the given YAML
+	// data.
+	//
+	// If the YAML data is invalid, an error is returned and the Loader's previous
+	// state must be preserved.
+	Load(node *yaml.Node, ctx Context) error
 }

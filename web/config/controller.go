@@ -1,8 +1,8 @@
 package config
 
 import (
-	"encoding/json"
-
+	"github.com/QuestScreen/api/comms"
+	"github.com/QuestScreen/api/server"
 	"github.com/flyx/askew/runtime"
 )
 
@@ -14,7 +14,15 @@ type EditHandler interface {
 
 // Controller backs the UI for manipulating config data in the web UI.
 type Controller interface {
-	json.Unmarshaler
+	// Receiver initializes the controller's state from JSON sent from the server.
+	comms.Receiver
+	// Sender sends the data entered by the user back to the server.
+	// By sending the data, it consolidates it so that future calls to Reset()
+	// will reset the values to the values being sent.
+	comms.Sender
+	// Load loads the given JSON data into the controller object.
+	// The JSON data
+	Load(json []byte, ctx server.Context) error
 	// UI creates and returns this controller's user interface.
 	// This method is called exactly once on each controller instance.
 	UI(editHandler EditHandler) runtime.Component
@@ -24,9 +32,6 @@ type Controller interface {
 	Reset()
 	// SetEnabled enables or disables the GUI.
 	SetEnabled(value bool)
-	// Data returns an object that will be serialized and sent back to the server
-	// to update the values of this ConfigItem state on the server side.
-	Data() interface{}
 }
 
 // Item is a named Controller.

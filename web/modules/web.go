@@ -3,8 +3,8 @@ package modules
 import (
 	"encoding/json"
 
-	"github.com/QuestScreen/api/web/groups"
-	"github.com/QuestScreen/api/web/server"
+	"github.com/QuestScreen/api/groups"
+	"github.com/QuestScreen/api/web"
 	"github.com/flyx/askew/runtime"
 )
 
@@ -15,10 +15,10 @@ import (
 type State interface {
 	// UI generates the user interface of the State.
 	// This method is called exactly once after a successful LoadFrom
-	UI(server server.State) runtime.Component
+	UI(server web.Server) runtime.Component
 }
 
 // Constructor is a function that constructs a state from given JSON input and
 // server/group environment.
-type Constructor func(data json.RawMessage, server server.State,
+type Constructor func(data json.RawMessage, server web.Server,
 	group groups.Group) (State, error)

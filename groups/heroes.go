@@ -14,7 +14,6 @@ type Hero interface {
 type HeroList interface {
 	Hero(index int) Hero
 	NumHeroes() int
-	HeroByID(id string) (index int, h Hero)
 }
 
 // HeroChangeAction is an enum describing a change in the list of heroes

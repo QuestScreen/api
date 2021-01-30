@@ -3,6 +3,7 @@ package modules
 import (
 	"time"
 
+	"github.com/QuestScreen/api/comms"
 	"github.com/QuestScreen/api/groups"
 	"github.com/QuestScreen/api/render"
 	"github.com/QuestScreen/api/resources"
@@ -47,7 +48,8 @@ type IDEndpoint interface {
 //
 // All funcs are expected to be called in the server thread.
 type State interface {
-	server.Serializable
+	comms.Sender
+	server.Persister
 	// CreateRendererData generates a data object that contains all required data
 	// for the Renderer to rebuild its state. The returned data object will
 	// be handed over to the renderer's RebuildState. For thread safety, it should

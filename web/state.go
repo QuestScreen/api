@@ -1,4 +1,6 @@
-package server
+package web
+
+import "github.com/QuestScreen/api/server"
 
 // RequestMethod is an enum of known methods for Fetch.
 type RequestMethod int
@@ -29,8 +31,10 @@ func (r RequestMethod) String() string {
 	}
 }
 
-// State is the web UI's interface to the server's state.
-type State interface {
+// Server is the web UI's interface to the server's state.
+type Server interface {
+	// gives access to the server's context.
+	server.Context
 	// Fetch sends an HTTP request to the server with the given method and given
 	// payload, at the path created from joining a base path with the given
 	// subpath. The result JSON is deserialized into the given target.
