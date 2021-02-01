@@ -2,7 +2,6 @@ package config
 
 import (
 	"github.com/QuestScreen/api/comms"
-	"github.com/QuestScreen/api/server"
 	"github.com/flyx/askew/runtime"
 )
 
@@ -20,9 +19,6 @@ type Controller interface {
 	// By sending the data, it consolidates it so that future calls to Reset()
 	// will reset the values to the values being sent.
 	comms.Sender
-	// Load loads the given JSON data into the controller object.
-	// The JSON data
-	Load(json []byte, ctx server.Context) error
 	// UI creates and returns this controller's user interface.
 	// This method is called exactly once on each controller instance.
 	UI(editHandler EditHandler) runtime.Component
