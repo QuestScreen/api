@@ -1,14 +1,49 @@
 package resources
 
+import (
+	"encoding/json"
+	"net/url"
+)
+
 // CollectionIndex indexes all resource collections of a module.
 type CollectionIndex int
 
 // Resource describes a selectable resource file.
-type Resource interface {
+type Resource struct {
 	// Name of the resource as it should be presented to the user.
-	Name() string
-	// Absolute path to the file
-	Path() string
+	Name string
+	// Location of the resource. For files from the file system, the URL will have
+	// file:// schema and is relative to the server, i.e. must not be resolved in
+	// the web UI.
+	//
+	// Is a pointer because of package url's interface, must not be nil.
+	Location *url.URL
+}
+
+// MarshalJSON marshals the resource's location as a simple string, to be parsed
+// as URL again.
+func (r *Resource) MarshalJSON() ([]byte, error) {
+	return json.Marshal(struct {
+		Name     string
+		Location string
+	}{r.Name, r.Location.String()})
+}
+
+// UnmarshalJSON loads the location into a string and then parses it as URL.
+func (r *Resource) UnmarshalJSON(b []byte) error {
+	var tmp struct {
+		Name     string
+		Location string
+	}
+	var err error
+	if err = json.Unmarshal(b, &tmp); err != nil {
+		return err
+	}
+	if r.Location, err = url.Parse(tmp.Location); err != nil {
+		return err
+	}
+	r.Name = tmp.Name
+	return nil
 }
 
 // Provider is the interface for querying resources.
@@ -27,7 +62,7 @@ type Provider interface {
 func Names(resources []Resource) []string {
 	ret := make([]string, len(resources))
 	for i := range resources {
-		ret[i] = resources[i].Name()
+		ret[i] = resources[i].Name
 	}
 	return ret
 }
