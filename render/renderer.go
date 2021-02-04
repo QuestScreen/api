@@ -1,6 +1,10 @@
 package render
 
-import "github.com/QuestScreen/api"
+import (
+	"net/url"
+
+	"github.com/QuestScreen/api"
+)
 
 // Image is a rectangular image stored as OpenGL texture
 // `id` is the name of an OpenGL texture iff width!=0.
@@ -86,7 +90,7 @@ type Renderer interface {
 	// the secondary color has an alpha value other than 255.
 	CreateCanvas(innerWidth, innerHeight int32, bg api.Background,
 		borders Directions) (canvas Canvas, content Rectangle)
-	// LoadImageFile loads an image file from the specified path.
+	// LoadImageFile loads an image file from the specified URL.
 	// if an error is returned, the returned image is empty.
 	//
 	// if scaleDownToOutput is true, the image is scaled down to the output
@@ -95,7 +99,7 @@ type Renderer interface {
 	//
 	// The image will always be scaled down to GL_MAX_TEXTURE_SIZE if its
 	// dimensions exceed it.
-	LoadImageFile(path string, scaleDownToOutput bool) (Image, error)
+	LoadImageFile(path *url.URL, scaleDownToOutput bool) (Image, error)
 	// LoadImageMem loads an image from data in memory.
 	// if an error is returned, the returned image is empty.
 	//
