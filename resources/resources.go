@@ -56,15 +56,10 @@ type Provider interface {
 	GetResources(index CollectionIndex) []Resource
 	// GetTextures queries the list of available textures.
 	GetTextures() []Resource
-}
-
-// Names generates a list of resource names from a list of resources.
-func Names(resources []Resource) []string {
-	ret := make([]string, len(resources))
-	for i := range resources {
-		ret[i] = resources[i].Name
-	}
-	return ret
+	// NumFontFamilies queries the number of available font families.
+	NumFontFamilies() int
+	// FontFamilyName queries the name of the font family at the given index.
+	FontFamilyName(index int) string
 }
 
 // Selector defines where a module finds resource files.

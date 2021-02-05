@@ -13,8 +13,6 @@ import (
 // render.Context.
 type Context interface {
 	resources.Provider
-	NumFontFamilies() int
-	FontFamilyName(index int) string
 	ActiveGroup() groups.Group
 }
 
