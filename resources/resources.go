@@ -48,18 +48,22 @@ func (r *Resource) UnmarshalJSON(b []byte) error {
 
 // Provider is the interface for querying resources.
 type Provider interface {
-	// GetResources queries the list of available resources of the given
+	// GetResources returns the list of available resources of the given
 	// resource collection index.
 	//
 	// The resources are filtered by the currently active system, group and scene.
 	// Each Resource object is read-only and may be freely shared between threads.
 	GetResources(index CollectionIndex) []Resource
-	// GetTextures queries the list of available textures.
+	// GetTextures returns the list of available textures.
 	GetTextures() []Resource
-	// NumFontFamilies queries the number of available font families.
+	// NumFontFamilies returns the number of available font families.
 	NumFontFamilies() int
-	// FontFamilyName queries the name of the font family at the given index.
+	// FontFamilyName returns the name of the font family at the given index.
 	FontFamilyName(index int) string
+	// NumTextures returns the number of available textures.
+	NumTextures() int
+	// TextureName returns the name of the texture at the given index.
+	TextureName(index int) string
 }
 
 // Selector defines where a module finds resource files.

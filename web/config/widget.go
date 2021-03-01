@@ -2,7 +2,7 @@ package config
 
 import (
 	"github.com/QuestScreen/api/comms"
-	"github.com/flyx/askew/runtime"
+	askew "github.com/flyx/askew/runtime"
 )
 
 // EditHandler is a listener that gets called when an UI element's displayed
@@ -13,7 +13,7 @@ type EditHandler interface {
 
 // Widget is the UI element for a ConfigItem.
 type Widget interface {
-	runtime.Component
+	askew.Component
 	// Receiver initializes the controller's state from JSON sent from the server.
 	comms.Receiver
 	// Sender sends the data entered by the user back to the server.

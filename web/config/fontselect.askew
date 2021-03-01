@@ -1,0 +1,45 @@
+<a:component name="FontSelect" params="families []string">
+	<a:data>
+		data api.Font
+	</a:data>
+	<a:handlers>
+	  toggleBold()
+		toggleItalic()
+	</a:handlers>
+	<div class="config-item-fragment">
+		<label for="font-family">Family</label>
+		<select name="font-family" class="font-families"
+				a:bindings="prop(value):(family int), prop(disabled):(familiesDisabled bool)">
+			<option a:for="index, name := range families"
+							a:assign="prop(value) = index, prop(textContent) = name"></option>
+		</select>
+	</div>
+	<div class="config-item-fragment">
+		<label for="font-size">Size</label>
+		<select name="font-size" class="font-size"
+				a:bindings="prop(value):(size int), prop(disabled):(sizeDisabled bool)">
+			<option value="0">Small</option>
+			<option value="1">Content</option>
+			<option value="2">Medium</option>
+			<option value="3">Heading</option>
+			<option value="4">Large</option>
+			<option value="5">Huge</option>
+		</select>
+	</div>
+	<div class="config-item-fragment">
+		<label for="font-style">Style</label>
+		<div class="pure-button-group" role="group" aria-label="Font Faces" style="display: inline">
+			<button class="pure-button font-style-selector"
+					a:capture="click:toggleBold"
+					a:bindings="class(pure-button-active):bold, prop(disabled):(boldDisabled bool)"><i class="fas fa-bold"></i></button>
+			<button class="pure-button font-style-selector"
+					a:capture="click:toggleItalic"
+					a:bindings="class(pure-button-active):italic, prop(disabled):(italicDisabled bool)"><i class="fas fa-italic"></i></button>
+		</div>
+	</div>
+	<div class="config-item-fragment">
+		<label for="font-color">Color</label>
+		<input type="color" name="font-color" required
+				a:bindings="prop(value):color" />
+	</div>
+</a:component>

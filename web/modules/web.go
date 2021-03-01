@@ -5,7 +5,7 @@ import (
 
 	"github.com/QuestScreen/api/groups"
 	"github.com/QuestScreen/api/web"
-	"github.com/flyx/askew/runtime"
+	askew "github.com/flyx/askew/runtime"
 )
 
 // State represents the module's state.
@@ -13,9 +13,7 @@ import (
 // to communicate changes. the only interface to the main application is the
 // generation of its user interface that will be placed onto the state page.
 type State interface {
-	// UI generates the user interface of the State.
-	// This method is called exactly once after a successful LoadFrom
-	UI(server web.Server) runtime.Component
+	askew.Component
 }
 
 // Constructor is a function that constructs a state from given JSON input and
