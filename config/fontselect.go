@@ -30,8 +30,8 @@ type webFont struct {
 	Color       api.RGBA           `json:"color"`
 }
 
-// NewConfig creates a new config item with the given values
-func NewConfig(familyIndex int, size api.FontSize, style api.FontStyle,
+// NewFontSelect creates a new FontSelect item with the given values
+func NewFontSelect(familyIndex int, size api.FontSize, style api.FontStyle,
 	color api.RGBA) *FontSelect {
 	return &FontSelect{Font: api.Font{FamilyIndex: familyIndex, Size: size,
 		Style: style, Color: color}}
