@@ -32,7 +32,16 @@ const (
 	InvisibilityIndicator
 )
 
-func (d *Dropdown) init(kind SelectorKind, indicator IndicatorKind) {
+// NewDropdown creates a new Dropdown and initializes it.
+func NewDropdown(kind SelectorKind, indicator IndicatorKind) *Dropdown {
+	ret := new(Dropdown)
+	ret.Init(kind, indicator)
+	return ret
+}
+
+// Init initializes the Dropdown.
+func (d *Dropdown) Init(kind SelectorKind, indicator IndicatorKind) {
+	d.askewInit(kind, indicator)
 	if kind == SelectAtMostOne {
 		d.items.Append(newDropdownItem(indicator, true, "None", -1))
 	}
