@@ -3,7 +3,7 @@ package controls
 import (
 	"syscall/js"
 
-	"github.com/QuestScreen/QuestScreen/web"
+	"github.com/QuestScreen/api/web"
 	askew "github.com/flyx/askew/runtime"
 )
 

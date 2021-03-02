@@ -3,7 +3,7 @@ package controls
 import (
 	"strconv"
 
-	"github.com/QuestScreen/QuestScreen/web"
+	"github.com/QuestScreen/api/web"
 )
 
 // SelectorKind defines how items in a dropdown menu are selected.
