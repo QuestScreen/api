@@ -6,15 +6,18 @@ import (
 	askew "github.com/flyx/askew/runtime"
 )
 
-// PopupController is an interface for controlling a popup.
-type PopupController interface {
-	Confirm()
-	Cancel()
-	NeedsDoShow() bool
-	DoShow()
+// PopupContent supplies the content of the popup and implements its controller.
+type PopupContent interface {
+	PopupBaseController
+	askew.Component
 }
 
-func (pb *PopupBase) show(title string, content askew.Component, confirmCaption, cancelCaption string) {
+// Show shows the given content inside the popup.
+// Calling show does not block; you are responsible for awaiting for user
+// confirmation or cancellation via the Cancel() / Confirm() callbacks of the
+// content.
+func (pb *PopupBase) Show(title string, content PopupContent, confirmCaption, cancelCaption string) {
+	pb.Controller = content
 	pb.Title.Set(title)
 	pb.Content.Set(content)
 	pb.ConfirmCaption.Set(confirmCaption)
@@ -65,67 +68,59 @@ func (pb *PopupBase) cleanup() {
 }
 
 // ErrorMsg shows the popup containing the given text titled as 'Error'.
-// Does not block.
+// Blocks until user dismisses the message, must be called from a goroutine.
 func (pb *PopupBase) ErrorMsg(text string) {
-	pb.show("Error", newPopupText(text), "OK", "")
+	pt := newPopupText(text)
+	pb.Show("Error", pt, "OK", "")
+	<-pt.val
+	pt.Destroy()
 }
 
-type confirmController struct {
-	val chan bool
+func (pt *popupText) Confirm() {
+	pt.val <- true
 }
 
-func (cc *confirmController) Confirm() {
-	cc.val <- true
+func (pt *popupText) Cancel() {
+	pt.val <- false
 }
 
-func (cc *confirmController) Cancel() {
-	cc.val <- false
-}
-
-func (cc *confirmController) NeedsDoShow() bool {
+func (pt *popupText) NeedsDoShow() bool {
 	return false
 }
 
-func (cc *confirmController) DoShow() {}
+func (pt *popupText) DoShow() {}
 
 // Confirm shows the popup and returns true if the user clicks OK, false if
 // Cancel. Blocking, must be called from a goroutine.
 func (pb *PopupBase) Confirm(text string) bool {
-	c := &confirmController{make(chan bool, 1)}
-	pb.Controller = c
-	pb.show("Confirm", newPopupText(text), "OK", "Cancel")
-	ret := <-c.val
-	pb.Controller = nil
+	pt := newPopupText(text)
+	pb.Show("Confirm", pt, "OK", "Cancel")
+	ret := <-pt.val
+	pt.Destroy()
 	return ret
 }
 
-type textInputController struct {
-	val   chan *string
-	input *popupInput
+func (pi *popupInput) Confirm() {
+	str := pi.Value.Get()
+	pi.val <- &str
 }
 
-func (tic *textInputController) Confirm() {
-	str := tic.input.Value.Get()
-	tic.val <- &str
+func (pi *popupInput) Cancel() {
+	pi.val <- nil
 }
 
-func (tic *textInputController) Cancel() {
-	tic.val <- nil
-}
-
-func (tic *textInputController) NeedsDoShow() bool {
+func (pi *popupInput) NeedsDoShow() bool {
 	return false
 }
 
-func (tic *textInputController) DoShow() {}
+func (pi *popupInput) DoShow() {}
 
 // TextInput shows the popup and returns the entered string if the user clicks
 // OK, nil if Cancel. Blocking, must be called from a goroutine.
 func (pb *PopupBase) TextInput(title, label string) *string {
-	tic := &textInputController{make(chan *string, 1), newPopupInput(label)}
-	pb.Controller = tic
-	pb.show(title, tic.input, "OK", "Cancel")
-	ret := <-tic.val
-	pb.Controller = nil
+	pi := newPopupInput(label)
+	pb.Show(title, pi, "OK", "Cancel")
+	ret := <-pi.val
+	pi.Destroy()
 	return ret
 }
