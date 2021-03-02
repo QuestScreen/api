@@ -60,10 +60,6 @@ type Provider interface {
 	NumFontFamilies() int
 	// FontFamilyName returns the name of the font family at the given index.
 	FontFamilyName(index int) string
-	// NumTextures returns the number of available textures.
-	NumTextures() int
-	// TextureName returns the name of the texture at the given index.
-	TextureName(index int) string
 }
 
 // Selector defines where a module finds resource files.
