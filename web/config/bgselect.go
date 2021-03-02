@@ -17,8 +17,8 @@ func NewBackgroundSelect(ctx server.Context, editHandler EditHandler) Widget {
 // Init initializes the BackgroundSelect widget.
 func (bg *BackgroundSelect) Init(ctx server.Context, editHandler EditHandler) {
 	bg.askewInit()
-	for i := 0; i < ctx.NumTextures(); i++ {
-		bg.texture.AddItem(ctx.TextureName(i), false)
+	for _, t := range ctx.GetTextures() {
+		bg.texture.AddItem(t.Name, false)
 	}
 }
 
