@@ -8,7 +8,7 @@ import (
 )
 
 // NewFontSelect creates a new FontSelect widget and initializes it.
-func NewFontSelect(ctx server.Context, editHandler EditHandler) *FontSelect {
+func NewFontSelect(ctx server.Context, editHandler EditHandler) Widget {
 	ret := new(FontSelect)
 	ret.Init(ctx, editHandler)
 	return ret

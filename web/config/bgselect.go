@@ -8,7 +8,7 @@ import (
 )
 
 // NewBackgroundSelect creates a new BackgroundSelect widget and initializes it.
-func NewBackgroundSelect(ctx server.Context, editHandler EditHandler) *BackgroundSelect {
+func NewBackgroundSelect(ctx server.Context, editHandler EditHandler) Widget {
 	ret := new(BackgroundSelect)
 	ret.Init(ctx, editHandler)
 	return ret
