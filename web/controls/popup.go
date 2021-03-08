@@ -76,7 +76,7 @@ func (pb *PopupBase) ErrorMsg(text string, cb func()) {
 
 func (pt *popupText) Confirm() {
 	if pt.cb != nil {
-		pt.cb()
+		go pt.cb()
 	}
 	pt.Destroy()
 }
@@ -99,7 +99,7 @@ func (pb *PopupBase) Confirm(text string, cb func()) {
 
 func (pi *popupInput) Confirm() {
 	if pi.cb != nil {
-		pi.cb(pi.Value.Get())
+		go pi.cb(pi.Value.Get())
 	}
 	pi.Destroy()
 }
