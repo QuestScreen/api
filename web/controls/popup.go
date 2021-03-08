@@ -78,11 +78,9 @@ func (pt *popupText) Confirm() {
 	if pt.cb != nil {
 		go pt.cb()
 	}
-	pt.Destroy()
 }
 
 func (pt *popupText) Cancel() {
-	pt.Destroy()
 }
 
 func (pt *popupText) NeedsDoShow() bool {
@@ -101,11 +99,9 @@ func (pi *popupInput) Confirm() {
 	if pi.cb != nil {
 		go pi.cb(pi.Value.Get())
 	}
-	pi.Destroy()
 }
 
 func (pi *popupInput) Cancel() {
-	pi.Destroy()
 }
 
 func (pi *popupInput) NeedsDoShow() bool {
