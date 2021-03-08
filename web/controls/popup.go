@@ -8,8 +8,11 @@ import (
 
 // PopupContent supplies the content of the popup and implements its controller.
 type PopupContent interface {
-	PopupBaseController
 	askew.Component
+	Cancel()
+	Confirm()
+	DoShow()
+	NeedsDoShow() bool
 }
 
 // Show shows the given content inside the popup.
@@ -17,7 +20,7 @@ type PopupContent interface {
 // confirmation or cancellation via the Cancel() / Confirm() callbacks of the
 // content.
 func (pb *PopupBase) Show(title string, content PopupContent, confirmCaption, cancelCaption string) {
-	pb.Controller = content
+	pb.ctrl = content
 	pb.Title.Set(title)
 	pb.Content.Set(content)
 	pb.ConfirmCaption.Set(confirmCaption)
@@ -27,10 +30,10 @@ func (pb *PopupBase) Show(title string, content PopupContent, confirmCaption, ca
 		pb.cancelVisible.Set("visible")
 		pb.CancelCaption.Set(cancelCaption)
 	}
-	if pb.Controller != nil && pb.Controller.NeedsDoShow() {
+	if content.NeedsDoShow() {
 		pb.Visibility.Set("hidden")
 		pb.Display.Set("flex")
-		pb.Controller.DoShow()
+		content.DoShow()
 		// this is required to avoid flickering. I have no idea why.
 		// it doesn't work if the timeout simply removes style.visibility.
 		pb.Display.Set("none")
@@ -48,23 +51,19 @@ func (pb *PopupBase) Show(title string, content PopupContent, confirmCaption, ca
 }
 
 func (pb *PopupBase) confirm() {
-	if pb.Controller != nil {
-		pb.Controller.Confirm()
-	}
+	pb.ctrl.Confirm()
 	pb.cleanup()
 }
 
 func (pb *PopupBase) cancel() {
-	if pb.Controller != nil {
-		pb.Controller.Cancel()
-	}
+	pb.ctrl.Cancel()
 	pb.cleanup()
 }
 
 func (pb *PopupBase) cleanup() {
 	pb.Display.Set("")
 	pb.Content.Set(nil)
-	pb.Controller = nil
+	pb.ctrl = nil
 }
 
 // ErrorMsg shows the popup containing the given text titled as 'Error'.
