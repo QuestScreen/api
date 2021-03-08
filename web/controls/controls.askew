@@ -94,17 +94,12 @@
 	</div>
 </a:component>
 
-<a:component name="popupText" params="caption string" gen-new-init>
-	<a:data>
-		val chan bool = make(chan bool, 1)
-	</a:data>
+<a:component name="popupText" params="caption string, var cb func()" gen-new-init>
   <a:text expr="caption"></a:text>
 </a:component>
 
-<a:component name="popupInput" params="label string" gen-new-init>
-	<a:data>
-		val chan *string
-	</a:data>
+<a:component name="popupInput" params="label string, var cb func(input string)"
+    gen-new-init>
   <label a:assign="prop(textContent)=label"></label>
   <input type="text" required a:bindings="prop(value):Value" />
 </a:component>

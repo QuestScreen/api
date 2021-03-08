@@ -68,20 +68,21 @@ func (pb *PopupBase) cleanup() {
 }
 
 // ErrorMsg shows the popup containing the given text titled as 'Error'.
-// Blocks until user dismisses the message, must be called from a goroutine.
-func (pb *PopupBase) ErrorMsg(text string) {
-	pt := newPopupText(text)
+// Calls cb after the user dismisses the message.
+func (pb *PopupBase) ErrorMsg(text string, cb func()) {
+	pt := newPopupText(text, cb)
 	pb.Show("Error", pt, "OK", "")
-	<-pt.val
-	pt.Destroy()
 }
 
 func (pt *popupText) Confirm() {
-	pt.val <- true
+	if pt.cb != nil {
+		pt.cb()
+	}
+	pt.Destroy()
 }
 
 func (pt *popupText) Cancel() {
-	pt.val <- false
+	pt.Destroy()
 }
 
 func (pt *popupText) NeedsDoShow() bool {
@@ -90,23 +91,21 @@ func (pt *popupText) NeedsDoShow() bool {
 
 func (pt *popupText) DoShow() {}
 
-// Confirm shows the popup and returns true if the user clicks OK, false if
-// Cancel. Blocking, must be called from a goroutine.
-func (pb *PopupBase) Confirm(text string) bool {
-	pt := newPopupText(text)
+// Confirm shows the popup and calls cb if the user clicks OK.
+func (pb *PopupBase) Confirm(text string, cb func()) {
+	pt := newPopupText(text, cb)
 	pb.Show("Confirm", pt, "OK", "Cancel")
-	ret := <-pt.val
-	pt.Destroy()
-	return ret
 }
 
 func (pi *popupInput) Confirm() {
-	str := pi.Value.Get()
-	pi.val <- &str
+	if pi.cb != nil {
+		pi.cb(pi.Value.Get())
+	}
+	pi.Destroy()
 }
 
 func (pi *popupInput) Cancel() {
-	pi.val <- nil
+	pi.Destroy()
 }
 
 func (pi *popupInput) NeedsDoShow() bool {
@@ -115,12 +114,9 @@ func (pi *popupInput) NeedsDoShow() bool {
 
 func (pi *popupInput) DoShow() {}
 
-// TextInput shows the popup and returns the entered string if the user clicks
-// OK, nil if Cancel. Blocking, must be called from a goroutine.
-func (pb *PopupBase) TextInput(title, label string) *string {
-	pi := newPopupInput(label)
+// TextInput shows the popup and calls the callback with the entered string if
+// the user clicks OK.
+func (pb *PopupBase) TextInput(title, label string, cb func(input string)) {
+	pi := newPopupInput(label, cb)
 	pb.Show(title, pi, "OK", "Cancel")
-	ret := <-pi.val
-	pi.Destroy()
-	return ret
 }
