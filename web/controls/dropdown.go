@@ -33,17 +33,20 @@ const (
 )
 
 // NewDropdown creates a new Dropdown and initializes it.
-func NewDropdown(kind SelectorKind, indicator IndicatorKind) *Dropdown {
+func NewDropdown(kind SelectorKind, indicator IndicatorKind, caption string) *Dropdown {
 	ret := new(Dropdown)
-	ret.Init(kind, indicator)
+	ret.Init(kind, indicator, caption)
 	return ret
 }
 
 // Init initializes the Dropdown.
-func (d *Dropdown) Init(kind SelectorKind, indicator IndicatorKind) {
+func (d *Dropdown) Init(kind SelectorKind, indicator IndicatorKind, caption string) {
 	d.askewInit(kind, indicator)
-	if kind == SelectAtMostOne {
+	switch kind {
+	case SelectAtMostOne:
 		d.items.Append(newDropdownItem(indicator, true, "None", -1))
+	case SelectMultiple:
+		d.caption.Set(caption)
 	}
 }
 
@@ -77,14 +80,14 @@ func (d *Dropdown) Hide() {
 }
 
 func (d *Dropdown) clickItem(index int) {
-	var newVal bool
 	if d.Controller != nil {
-		newVal = d.Controller.ItemClicked(index)
+		go func() {
+			newVal := d.Controller.ItemClicked(index)
+			d.SetItem(index, newVal)
+		}()
 	} else {
-		newVal = true
+		d.SetItem(index, true)
 	}
-
-	d.SetItem(index, newVal)
 }
 
 // SetItem sets the value of an item.
