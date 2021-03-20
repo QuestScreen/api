@@ -20,7 +20,7 @@ func (fs *FontSelect) Init(ctx server.Context, editHandler EditHandler) {
 	for i := 0; i < ctx.NumFontFamilies(); i++ {
 		families[i] = ctx.FontFamilyName((i))
 	}
-	fs.askewInit(families)
+	fs.askewInit(families, editHandler)
 }
 
 // Receive loads the data given via input.
@@ -70,4 +70,8 @@ func (fs *FontSelect) toggleBold() {
 
 func (fs *FontSelect) toggleItalic() {
 	fs.italic.Set(!fs.italic.Get())
+}
+
+func (fs *FontSelect) edited() {
+	fs.editHandler.Edited()
 }

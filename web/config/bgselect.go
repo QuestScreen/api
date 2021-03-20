@@ -16,7 +16,7 @@ func NewBackgroundSelect(ctx server.Context, editHandler EditHandler) Widget {
 
 // Init initializes the BackgroundSelect widget.
 func (bg *BackgroundSelect) Init(ctx server.Context, editHandler EditHandler) {
-	bg.askewInit()
+	bg.askewInit(editHandler)
 	for _, t := range ctx.GetTextures() {
 		bg.texture.AddItem(t.Name, false)
 	}
@@ -63,4 +63,13 @@ func (bg *BackgroundSelect) Send(ctx server.Context) interface{} {
 	bg.data.Secondary.A = uint8(bg.secondaryOpacity.Get())
 	bg.data.TextureIndex = bg.texture.CurIndex
 	return &bg.data
+}
+
+func (bg *BackgroundSelect) edited() {
+	bg.editHandler.Edited()
+}
+
+func (bg *BackgroundSelect) ItemClicked(index int) bool {
+	bg.editHandler.Edited()
+	return true
 }

@@ -3,10 +3,13 @@
 	"github.com/QuestScreen/api"
 </a:import>
 
-<a:component name="BackgroundSelect">
+<a:component name="BackgroundSelect" params="var editHandler EditHandler">
 	<a:data>
 		data api.Background
 	</a:data>
+	<a:handlers>
+		edited()
+	</a:handlers>
 	<table class="config-item-table">
 		<thead>
 			<tr>
@@ -17,23 +20,27 @@
 			<tr>
 				<th>Color</th>
 				<td><input type="color" name="primary-color" required
-						a:bindings="prop(value):primaryColor, prop(disabled):(pcDisabled bool)"/></td>
+						a:bindings="prop(value):primaryColor, prop(disabled):(pcDisabled bool)"
+						a:capture="input:edited()" /></td>
 				<td><input type="color" name="secondary-color" required
-						a:bindings="prop(value):secondaryColor, prop(disabled):(scDisabled bool)"/></td>
+						a:bindings="prop(value):secondaryColor, prop(disabled):(scDisabled bool)"
+						a:capture="input:edited()" /></td>
 			</tr>
 			<tr>
 				<th>Opacity</th>
 				<td><input type="range" name="primary-opacity"
 						min="0" max="255" step="1" required
-						a:bindings="prop(value):(primaryOpacity int), prop(disabled):(poDisabled bool)"/></td>
+						a:bindings="prop(value):(primaryOpacity int), prop(disabled):(poDisabled bool)"
+						a:capture="input:edited()" /></td>
 				<td><input type="range" name="secondary-opacity"
 						min="0" max="255" step="1" required
-						a:bindings="prop(value):(secondaryOpacity int), prop(disabled):(soDisabled bool)"/></td>
+						a:bindings="prop(value):(secondaryOpacity int), prop(disabled):(soDisabled bool)"
+						a:capture="input:edited()" /></td>
 			</tr>
 		</tbody>
 	</table>
 	<div class="config-item-fragment">
 		<label for="texture">Texture</label>
-		<a:embed name="texture" type="controls.Dropdown" args="controls.SelectAtMostOne, controls.SelectionIndicator"></a:embed>
+		<a:embed name="texture" type="controls.Dropdown" args="controls.SelectAtMostOne, controls.SelectionIndicator, ``" control></a:embed>
 	</div>
 </a:component>

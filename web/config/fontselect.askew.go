@@ -58,6 +58,7 @@ type FontSelect struct {
 	italic           askew.BoolValue
 	italicDisabled   askew.BoolValue
 	color            askew.StringValue
+	editHandler      EditHandler
 	data             api.Font
 }
 
@@ -70,8 +71,9 @@ func (o *FontSelect) FirstNode() js.Value {
 // askewInit initializes the component, discarding all previous information.
 // The component is initially a DocumentFragment until it gets inserted into
 // the main document. It can be manipulated both before and after insertion.
-func (o *FontSelect) askewInit(families []string) {
+func (o *FontSelect) askewInit(families []string, editHandler EditHandler) {
 	o.αcd.Init(αFontSelectTemplate.Get("content").Call("cloneNode", true))
+	o.editHandler = editHandler
 
 	o.family.BoundValue = askew.NewBoundProperty(&o.αcd, "value", 5, 3)
 	o.familiesDisabled.BoundValue = askew.NewBoundProperty(&o.αcd, "disabled", 5, 3)
@@ -107,10 +109,31 @@ func (o *FontSelect) askewInit(families []string) {
 		}
 	}
 	{
+		src := o.αcd.Walk(5, 3)
+		{
+			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
+				o.αcalledited()
+				return nil
+			})
+			src.Call("addEventListener", "input", wrapper)
+		}
+	}
+	{
+		src := o.αcd.Walk(7, 3)
+		{
+			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
+				o.αcalledited()
+				return nil
+			})
+			src.Call("addEventListener", "input", wrapper)
+		}
+	}
+	{
 		src := o.αcd.Walk(9, 3, 1)
 		{
 			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
 				o.αcalltoggleBold()
+				arguments[0].Call("preventDefault")
 				return nil
 			})
 			src.Call("addEventListener", "click", wrapper)
@@ -121,9 +144,20 @@ func (o *FontSelect) askewInit(families []string) {
 		{
 			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
 				o.αcalltoggleItalic()
+				arguments[0].Call("preventDefault")
 				return nil
 			})
 			src.Call("addEventListener", "click", wrapper)
+		}
+	}
+	{
+		src := o.αcd.Walk(11, 3)
+		{
+			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
+				o.αcalledited()
+				return nil
+			})
+			src.Call("addEventListener", "input", wrapper)
 		}
 	}
 }
@@ -148,6 +182,9 @@ func (o *FontSelect) Destroy() {
 	o.αcd.DoDestroy()
 }
 
+func (o *FontSelect) αcalledited() {
+	o.edited()
+}
 func (o *FontSelect) αcalltoggleBold() {
 	o.toggleBold()
 }

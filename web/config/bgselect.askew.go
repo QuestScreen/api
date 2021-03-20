@@ -15,6 +15,7 @@ var αBackgroundSelectTemplate = js.Global().Get("document").Call("createElement
 func init() {
 	αBackgroundSelectTemplate.Set("innerHTML", `
 	<!--data-->
+	<!--handlers-->
 	<table class="config-item-table">
 		<thead>
 			<tr>
@@ -52,6 +53,7 @@ type BackgroundSelect struct {
 	poDisabled       askew.BoolValue
 	secondaryOpacity askew.IntValue
 	soDisabled       askew.BoolValue
+	editHandler      EditHandler
 	data             api.Background
 	texture          controls.Dropdown
 }
@@ -65,21 +67,63 @@ func (o *BackgroundSelect) FirstNode() js.Value {
 // askewInit initializes the component, discarding all previous information.
 // The component is initially a DocumentFragment until it gets inserted into
 // the main document. It can be manipulated both before and after insertion.
-func (o *BackgroundSelect) askewInit() {
+func (o *BackgroundSelect) askewInit(editHandler EditHandler) {
 	o.αcd.Init(αBackgroundSelectTemplate.Get("content").Call("cloneNode", true))
+	o.editHandler = editHandler
 
-	o.primaryColor.BoundValue = askew.NewBoundProperty(&o.αcd, "value", 3, 3, 1, 3, 0)
-	o.pcDisabled.BoundValue = askew.NewBoundProperty(&o.αcd, "disabled", 3, 3, 1, 3, 0)
-	o.secondaryColor.BoundValue = askew.NewBoundProperty(&o.αcd, "value", 3, 3, 1, 5, 0)
-	o.scDisabled.BoundValue = askew.NewBoundProperty(&o.αcd, "disabled", 3, 3, 1, 5, 0)
-	o.primaryOpacity.BoundValue = askew.NewBoundProperty(&o.αcd, "value", 3, 3, 3, 3, 0)
-	o.poDisabled.BoundValue = askew.NewBoundProperty(&o.αcd, "disabled", 3, 3, 3, 3, 0)
-	o.secondaryOpacity.BoundValue = askew.NewBoundProperty(&o.αcd, "value", 3, 3, 3, 5, 0)
-	o.soDisabled.BoundValue = askew.NewBoundProperty(&o.αcd, "disabled", 3, 3, 3, 5, 0)
+	o.primaryColor.BoundValue = askew.NewBoundProperty(&o.αcd, "value", 5, 3, 1, 3, 0)
+	o.pcDisabled.BoundValue = askew.NewBoundProperty(&o.αcd, "disabled", 5, 3, 1, 3, 0)
+	o.secondaryColor.BoundValue = askew.NewBoundProperty(&o.αcd, "value", 5, 3, 1, 5, 0)
+	o.scDisabled.BoundValue = askew.NewBoundProperty(&o.αcd, "disabled", 5, 3, 1, 5, 0)
+	o.primaryOpacity.BoundValue = askew.NewBoundProperty(&o.αcd, "value", 5, 3, 3, 3, 0)
+	o.poDisabled.BoundValue = askew.NewBoundProperty(&o.αcd, "disabled", 5, 3, 3, 3, 0)
+	o.secondaryOpacity.BoundValue = askew.NewBoundProperty(&o.αcd, "value", 5, 3, 3, 5, 0)
+	o.soDisabled.BoundValue = askew.NewBoundProperty(&o.αcd, "disabled", 5, 3, 3, 5, 0)
 	{
-		container := o.αcd.Walk(5)
-		o.texture.Init(controls.SelectAtMostOne, controls.SelectionIndicator)
+		src := o.αcd.Walk(5, 3, 1, 3, 0)
+		{
+			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
+				o.αcalledited()
+				return nil
+			})
+			src.Call("addEventListener", "input", wrapper)
+		}
+	}
+	{
+		src := o.αcd.Walk(5, 3, 1, 5, 0)
+		{
+			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
+				o.αcalledited()
+				return nil
+			})
+			src.Call("addEventListener", "input", wrapper)
+		}
+	}
+	{
+		src := o.αcd.Walk(5, 3, 3, 3, 0)
+		{
+			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
+				o.αcalledited()
+				return nil
+			})
+			src.Call("addEventListener", "input", wrapper)
+		}
+	}
+	{
+		src := o.αcd.Walk(5, 3, 3, 5, 0)
+		{
+			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
+				o.αcalledited()
+				return nil
+			})
+			src.Call("addEventListener", "input", wrapper)
+		}
+	}
+	{
+		container := o.αcd.Walk(7)
+		o.texture.Init(controls.SelectAtMostOne, controls.SelectionIndicator, ``)
 		o.texture.InsertInto(container, container.Get("childNodes").Index(3))
+		o.texture.Controller = o
 	}
 }
 
@@ -102,6 +146,10 @@ func (o *BackgroundSelect) Extract() {
 func (o *BackgroundSelect) Destroy() {
 	o.texture.Destroy()
 	o.αcd.DoDestroy()
+}
+
+func (o *BackgroundSelect) αcalledited() {
+	o.edited()
 }
 
 // BackgroundSelectList is a list of BackgroundSelect whose manipulation methods auto-update
