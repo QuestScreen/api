@@ -20,6 +20,7 @@ func (bg *BackgroundSelect) Init(ctx server.Context) {
 	for _, t := range ctx.GetTextures() {
 		bg.texture.AddItem(t.Name, false)
 	}
+	bg.texture.SetItem(-1, true)
 }
 
 func (bg *BackgroundSelect) SetEditHandler(editHandler EditHandler) {

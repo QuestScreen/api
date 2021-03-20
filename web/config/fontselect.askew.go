@@ -58,6 +58,7 @@ type FontSelect struct {
 	italic           askew.BoolValue
 	italicDisabled   askew.BoolValue
 	color            askew.StringValue
+	colorDisabled    askew.BoolValue
 	data             api.Font
 	editHandler      EditHandler
 }
@@ -83,6 +84,7 @@ func (o *FontSelect) askewInit(families []string) {
 	o.italic.BoundValue = askew.NewBoundClasses(&o.αcd, []string{"pure-button-active"}, 9, 3, 3)
 	o.italicDisabled.BoundValue = askew.NewBoundProperty(&o.αcd, "disabled", 9, 3, 3)
 	o.color.BoundValue = askew.NewBoundProperty(&o.αcd, "value", 11, 3)
+	o.colorDisabled.BoundValue = askew.NewBoundProperty(&o.αcd, "disabled", 11, 3)
 	{
 		block := o.αcd.Walk()
 		{

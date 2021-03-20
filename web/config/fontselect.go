@@ -52,6 +52,7 @@ func (fs *FontSelect) SetEnabled(value bool) {
 	fs.sizeDisabled.Set(!value)
 	fs.boldDisabled.Set(!value)
 	fs.italicDisabled.Set(!value)
+	fs.colorDisabled.Set(!value)
 }
 
 // Send returns an api.Font object containing the currently selected values.

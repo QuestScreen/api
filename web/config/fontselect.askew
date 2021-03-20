@@ -44,7 +44,7 @@
 	<div class="config-item-fragment">
 		<label for="font-color">Color</label>
 		<input type="color" name="font-color" required
-				a:bindings="prop(value):color"
+				a:bindings="prop(value):color, prop(disabled):(colorDisabled bool)"
 				a:capture="input:edited()" />
 	</div>
 </a:component>
