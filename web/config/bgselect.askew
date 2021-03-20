@@ -3,9 +3,10 @@
 	"github.com/QuestScreen/api"
 </a:import>
 
-<a:component name="BackgroundSelect" params="var editHandler EditHandler">
+<a:component name="BackgroundSelect">
 	<a:data>
 		data api.Background
+		editHandler EditHandler
 	</a:data>
 	<a:handlers>
 		edited()

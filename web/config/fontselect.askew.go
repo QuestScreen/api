@@ -58,8 +58,8 @@ type FontSelect struct {
 	italic           askew.BoolValue
 	italicDisabled   askew.BoolValue
 	color            askew.StringValue
-	editHandler      EditHandler
 	data             api.Font
+	editHandler      EditHandler
 }
 
 // FirstNode returns the first DOM node of this component.
@@ -71,9 +71,8 @@ func (o *FontSelect) FirstNode() js.Value {
 // askewInit initializes the component, discarding all previous information.
 // The component is initially a DocumentFragment until it gets inserted into
 // the main document. It can be manipulated both before and after insertion.
-func (o *FontSelect) askewInit(families []string, editHandler EditHandler) {
+func (o *FontSelect) askewInit(families []string) {
 	o.αcd.Init(αFontSelectTemplate.Get("content").Call("cloneNode", true))
-	o.editHandler = editHandler
 
 	o.family.BoundValue = askew.NewBoundProperty(&o.αcd, "value", 5, 3)
 	o.familiesDisabled.BoundValue = askew.NewBoundProperty(&o.αcd, "disabled", 5, 3)

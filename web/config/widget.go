@@ -26,4 +26,6 @@ type Widget interface {
 	Reset()
 	// SetEnabled enables or disables the GUI.
 	SetEnabled(value bool)
+	// SetEditHandler sets the object that should receive Edited() events.
+	SetEditHandler(handler EditHandler)
 }

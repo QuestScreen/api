@@ -1,6 +1,7 @@
-<a:component name="FontSelect" params="families []string, var editHandler EditHandler">
+<a:component name="FontSelect" params="families []string">
 	<a:data>
 		data api.Font
+		editHandler EditHandler
 	</a:data>
 	<a:handlers>
 	  toggleBold()

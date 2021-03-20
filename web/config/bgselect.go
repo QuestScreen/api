@@ -8,18 +8,22 @@ import (
 )
 
 // NewBackgroundSelect creates a new BackgroundSelect widget and initializes it.
-func NewBackgroundSelect(ctx server.Context, editHandler EditHandler) Widget {
+func NewBackgroundSelect(ctx server.Context) Widget {
 	ret := new(BackgroundSelect)
-	ret.Init(ctx, editHandler)
+	ret.Init(ctx)
 	return ret
 }
 
 // Init initializes the BackgroundSelect widget.
-func (bg *BackgroundSelect) Init(ctx server.Context, editHandler EditHandler) {
-	bg.askewInit(editHandler)
+func (bg *BackgroundSelect) Init(ctx server.Context) {
+	bg.askewInit()
 	for _, t := range ctx.GetTextures() {
 		bg.texture.AddItem(t.Name, false)
 	}
+}
+
+func (bg *BackgroundSelect) SetEditHandler(editHandler EditHandler) {
+	bg.editHandler = editHandler
 }
 
 // Receive loads the data in the given JSON input.

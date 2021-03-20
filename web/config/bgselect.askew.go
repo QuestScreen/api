@@ -53,8 +53,8 @@ type BackgroundSelect struct {
 	poDisabled       askew.BoolValue
 	secondaryOpacity askew.IntValue
 	soDisabled       askew.BoolValue
-	editHandler      EditHandler
 	data             api.Background
+	editHandler      EditHandler
 	texture          controls.Dropdown
 }
 
@@ -67,9 +67,8 @@ func (o *BackgroundSelect) FirstNode() js.Value {
 // askewInit initializes the component, discarding all previous information.
 // The component is initially a DocumentFragment until it gets inserted into
 // the main document. It can be manipulated both before and after insertion.
-func (o *BackgroundSelect) askewInit(editHandler EditHandler) {
+func (o *BackgroundSelect) askewInit() {
 	o.αcd.Init(αBackgroundSelectTemplate.Get("content").Call("cloneNode", true))
-	o.editHandler = editHandler
 
 	o.primaryColor.BoundValue = askew.NewBoundProperty(&o.αcd, "value", 5, 3, 1, 3, 0)
 	o.pcDisabled.BoundValue = askew.NewBoundProperty(&o.αcd, "disabled", 5, 3, 1, 3, 0)

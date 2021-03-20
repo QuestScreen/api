@@ -8,19 +8,23 @@ import (
 )
 
 // NewFontSelect creates a new FontSelect widget and initializes it.
-func NewFontSelect(ctx server.Context, editHandler EditHandler) Widget {
+func NewFontSelect(ctx server.Context) Widget {
 	ret := new(FontSelect)
-	ret.Init(ctx, editHandler)
+	ret.Init(ctx)
 	return ret
 }
 
 // Init initializes the FontSelect widget.
-func (fs *FontSelect) Init(ctx server.Context, editHandler EditHandler) {
+func (fs *FontSelect) Init(ctx server.Context) {
 	families := make([]string, ctx.NumFontFamilies())
 	for i := 0; i < ctx.NumFontFamilies(); i++ {
 		families[i] = ctx.FontFamilyName((i))
 	}
-	fs.askewInit(families, editHandler)
+	fs.askewInit(families)
+}
+
+func (fs *FontSelect) SetEditHandler(editHandler EditHandler) {
+	fs.editHandler = editHandler
 }
 
 // Receive loads the data given via input.
