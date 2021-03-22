@@ -88,6 +88,10 @@ func (d *Dropdown) clickItem(index int) {
 	} else {
 		d.SetItem(index, true)
 	}
+	if d.kind != SelectMultiple {
+		// auto-hide dropdown unless it's multi select
+		d.Hide()
+	}
 }
 
 // SetItem sets the value of an item.
