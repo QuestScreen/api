@@ -2,8 +2,8 @@ package config
 
 import (
 	"encoding/json"
-	"fmt"
 
+	"github.com/QuestScreen/api"
 	"github.com/QuestScreen/api/server"
 )
 
@@ -40,11 +40,9 @@ func (bg *BackgroundSelect) Receive(input json.RawMessage, ctx server.Context) e
 // If the values have never been queried, the UI is reset to the initial
 // data the state object was loaded with.
 func (bg *BackgroundSelect) Reset() {
-	bg.primaryColor.Set(fmt.Sprintf(
-		"%02x%02x%02x", bg.data.Primary.R, bg.data.Primary.G, bg.data.Primary.B))
+	bg.primaryColor.Set(bg.data.Primary.WithoutAlpha().HexRepr())
 	bg.primaryOpacity.Set(int(bg.data.Primary.A))
-	bg.secondaryColor.Set(fmt.Sprintf(
-		"%02x%02x%02x", bg.data.Secondary.R, bg.data.Secondary.G, bg.data.Secondary.B))
+	bg.secondaryColor.Set(bg.data.Secondary.WithoutAlpha().HexRepr())
 	bg.secondaryOpacity.Set(int(bg.data.Secondary.A))
 	bg.texture.SetItem(bg.data.TextureIndex, true)
 }
@@ -60,12 +58,17 @@ func (bg *BackgroundSelect) SetEnabled(value bool) {
 
 // Send returns an instance of api.Background
 func (bg *BackgroundSelect) Send(ctx server.Context) interface{} {
-	fmt.Sscanf(bg.primaryColor.Get(), "%02x%02x%02x", &bg.data.Primary.R,
-		&bg.data.Primary.G, &bg.data.Primary.B)
-	bg.data.Primary.A = uint8(bg.primaryOpacity.Get())
-	fmt.Sscanf(bg.secondaryColor.Get(), "%02x%02x%02x", &bg.data.Secondary.R,
-		&bg.data.Secondary.G, &bg.data.Secondary.B)
-	bg.data.Secondary.A = uint8(bg.secondaryOpacity.Get())
+	var tmp api.RGB
+	if err := tmp.FromHexRepr(bg.primaryColor.Get()); err != nil {
+		panic(err)
+	}
+	bg.data.Primary = tmp.WithAlpha(uint8(bg.primaryOpacity.Get()))
+
+	if err := tmp.FromHexRepr(bg.secondaryColor.Get()); err != nil {
+		panic(err)
+	}
+	bg.data.Secondary = tmp.WithAlpha(uint8(bg.secondaryOpacity.Get()))
+
 	bg.data.TextureIndex = bg.texture.CurIndex
 	return &bg.data
 }

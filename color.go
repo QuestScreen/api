@@ -26,16 +26,20 @@ func (c RGB) WithAlpha(alpha uint8) RGBA {
 	return RGBA{R: c.R, G: c.G, B: c.B, A: alpha}
 }
 
-// UnmarshalJSON loads a JSON string as HTML hexcode into RGBColor
-func (c *RGB) UnmarshalJSON(data []byte) error {
-	var s string
-	if err := json.Unmarshal(data, &s); err != nil {
-		return err
+// HexRepr returns the color rendered with leading '#' and two hex digits per
+// color.
+func (c RGB) HexRepr() string {
+	bytes := [3]byte{c.R, c.G, c.B}
+	return "#" + hex.EncodeToString(bytes[:])
+}
+
+// FromHexRepr loads a representation with leading '#' and two hex digits per
+// color into the given object.
+func (c *RGB) FromHexRepr(repr string) error {
+	if len(repr) != 7 || repr[0] != '#' {
+		return fmt.Errorf("\"%s\" is not a valid color hexcode", repr)
 	}
-	if len(s) != 7 || s[0] != '#' {
-		return fmt.Errorf("\"%s\" is not a valid color hexcode", s)
-	}
-	bytes, err := hex.DecodeString(s[1:])
+	bytes, err := hex.DecodeString(repr[1:])
 	if err != nil {
 		return err
 	}
@@ -43,11 +47,45 @@ func (c *RGB) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// UnmarshalJSON loads a JSON string as HTML hexcode into RGBColor
+func (c *RGB) UnmarshalJSON(data []byte) error {
+	var s string
+	if err := json.Unmarshal(data, &s); err != nil {
+		return err
+	}
+	return c.FromHexRepr(s)
+}
+
 // MarshalJSON represents the color as JSON string containing a HTML hexcode
 func (c *RGB) MarshalJSON() ([]byte, error) {
-	bytes := [3]byte{c.R, c.G, c.B}
-	s := "#" + hex.EncodeToString(bytes[:])
+	s := c.HexRepr()
 	return json.Marshal(&s)
+}
+
+// WithoutAlpha returns the color without the Alpha component
+func (c RGBA) WithoutAlpha() RGB {
+	return RGB{R: c.R, G: c.G, B: c.B}
+}
+
+// HexRepr returns the color rendered with leading '#' and two hex digits per
+// color.
+func (c RGBA) HexRepr() string {
+	bytes := [4]byte{c.R, c.G, c.B, c.A}
+	return "#" + hex.EncodeToString(bytes[:])
+}
+
+// FromHexRepr loads a representation with leading '#' and two hex digits per
+// color into the given object.
+func (c *RGBA) FromHexRepr(repr string) error {
+	if len(repr) != 9 || repr[0] != '#' {
+		return fmt.Errorf("\"%s\" is not a valid color hexcode", repr)
+	}
+	bytes, err := hex.DecodeString(repr[1:])
+	if err != nil {
+		return err
+	}
+	*c = RGBA{R: bytes[0], G: bytes[1], B: bytes[2], A: bytes[3]}
+	return nil
 }
 
 // UnmarshalJSON loads a JSON string as HTML hexcode into RGBAColor
@@ -56,21 +94,12 @@ func (c *RGBA) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &s); err != nil {
 		return err
 	}
-	if len(s) != 9 || s[0] != '#' {
-		return fmt.Errorf("\"%s\" is not a valid color hexcode", s)
-	}
-	bytes, err := hex.DecodeString(s[1:])
-	if err != nil {
-		return err
-	}
-	*c = RGBA{R: bytes[0], G: bytes[1], B: bytes[2], A: bytes[3]}
-	return nil
+	return c.FromHexRepr(s)
 }
 
 // MarshalJSON represents the color as JSON string containing a HTML hexcode
 func (c *RGBA) MarshalJSON() ([]byte, error) {
-	bytes := [4]byte{c.R, c.G, c.B, c.A}
-	s := "#" + hex.EncodeToString(bytes[:])
+	s := c.HexRepr()
 	return json.Marshal(&s)
 }
 

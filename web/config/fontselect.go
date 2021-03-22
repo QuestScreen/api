@@ -44,6 +44,7 @@ func (fs *FontSelect) Reset() {
 	fs.size.Set(int(fs.data.Size))
 	fs.bold.Set(fs.data.Style == api.BoldFont || fs.data.Style == api.BoldItalicFont)
 	fs.italic.Set(fs.data.Style == api.ItalicFont || fs.data.Style == api.BoldItalicFont)
+	fs.color.Set(fs.data.Color.WithoutAlpha().HexRepr())
 }
 
 // SetEnabled enables or disables the GUI.
@@ -66,6 +67,11 @@ func (fs *FontSelect) Send(ctx server.Context) interface{} {
 	if fs.italic.Get() {
 		fs.data.Style += 2
 	}
+	var tmp api.RGB
+	if err := tmp.FromHexRepr(fs.color.Get()); err != nil {
+		panic(err)
+	}
+	fs.data.Color = tmp.WithAlpha(255)
 	return &fs.data
 }
 
