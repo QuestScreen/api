@@ -2,12 +2,10 @@ package config
 
 import (
 	"encoding/json"
-	"log"
 
 	"github.com/QuestScreen/api"
 	"github.com/QuestScreen/api/comms"
 	"github.com/QuestScreen/api/server"
-	"gopkg.in/yaml.v3"
 )
 
 // BackgroundSelect is an Item that allows the user to define a background
@@ -48,44 +46,7 @@ type persistedBackground struct {
 	Texture            string
 }
 
-// Load loads a background from a YAML input
-// `{primary: <rgb>, secondary: <rgb>, texture: <name>}`
-func (b *BackgroundSelect) Load(
-	input *yaml.Node, ctx server.Context) error {
-	var value persistedBackground
-	if err := input.Decode(&value); err != nil {
-		return err
-	}
-	b.Primary = value.Primary
-	b.Secondary = value.Secondary
-	b.TextureIndex = -1
-	if value.Texture != "" {
-		textures := ctx.GetTextures()
-		for i := range textures {
-			if textures[i].Name == value.Texture {
-				b.TextureIndex = i
-				break
-			}
-		}
-		if b.TextureIndex == -1 {
-			log.Println("Unknown texture: " + value.Texture)
-		}
-	}
-	return nil
-}
-
 // Send returns the object itself.
 func (b *BackgroundSelect) Send(ctx server.Context) interface{} {
 	return b.Background
-}
-
-// Persist returns a view that gives the texture name as string.
-func (b *BackgroundSelect) Persist(ctx server.Context) interface{} {
-	ret := &persistedBackground{
-		Primary: b.Primary, Secondary: b.Secondary,
-	}
-	if b.TextureIndex != -1 {
-		ret.Texture = ctx.GetTextures()[b.TextureIndex].Name
-	}
-	return ret
 }
