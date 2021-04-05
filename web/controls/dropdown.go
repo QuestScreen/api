@@ -2,6 +2,7 @@ package controls
 
 import (
 	"strconv"
+	"syscall/js"
 
 	"github.com/QuestScreen/api/web"
 )
@@ -50,32 +51,42 @@ func (d *Dropdown) Init(kind SelectorKind, indicator IndicatorKind, caption stri
 	}
 }
 
-func (d *Dropdown) click() {
-	if !d.Disabled.Get() {
-		d.Toggle()
+// Root implements controls.FocusHolder and returns the root list element that
+// contains the dropdown list.
+func (d *Dropdown) Root() js.Value {
+	return d.rootItem.Get()
+}
+
+// FocusLeaving implements controls.FocusHolder and is called when the focus
+// leaves this dropdown.
+func (d *Dropdown) FocusLeaving() {
+	if d.opened.Get() {
+		d.toggle()
 	}
 }
 
-// Toggle toggles the state of the dropdown (open/closed)
-func (d *Dropdown) Toggle() {
+func (d *Dropdown) toggle() bool {
 	if d.opened.Get() {
 		d.opened.Set(false)
 		if web.InSmartphoneMode() {
 			d.menuHeight.Set("")
 		}
-		d.link.Get().Call("blur")
+		return false
 	} else {
 		d.opened.Set(true)
 		if web.InSmartphoneMode() {
 			d.menuHeight.Set(strconv.Itoa(d.items.Len()*2) + "em")
 		}
+		SetFocusHolder(d)
+		return true
 	}
 }
 
-// Hide hides the dropdown menu
-func (d *Dropdown) Hide() {
-	if d.opened.Get() {
-		d.Toggle()
+func (d *Dropdown) click() {
+	if !d.Disabled.Get() {
+		if !d.toggle() {
+			SetFocusHolder(nil)
+		}
 	}
 }
 
@@ -90,7 +101,8 @@ func (d *Dropdown) clickItem(index int) {
 	}
 	if d.kind != SelectMultiple {
 		// auto-hide dropdown unless it's multi select
-		d.Hide()
+		d.FocusLeaving()
+		SetFocusHolder(nil)
 	}
 }
 

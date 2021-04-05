@@ -1,0 +1,15 @@
+.qs-dropdown-selector > a:hover,
+.qs-dropdown-selector > a:active,
+.qs-dropdown-selector.pure-menu-active > a,
+.qs-dropdown-selector > .pure-menu-children a:hover,
+.qs-dropdown-selector > .pure-menu-children a:active {
+  background-color: var(--medium-highlight);
+}
+
+.qs-dropdown-selector .pure-menu-link {
+  color: var(--text);
+}
+
+.qs-dropdown-selector .pure-menu-children {
+  background-color: var(--medium);
+}

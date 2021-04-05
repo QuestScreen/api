@@ -16,9 +16,9 @@
   <li class="pure-menu-item" a:bindings="class(pure-menu-selected):Selected">
     <a href="#" class="pure-menu-link" a:assign="dataset(index)=itemIndex, class(emph)=emph"
         a:capture="click:clickItem{preventDefault}">
-			<i a:if="indicator == SelectionIndicator" class="fas fa-check-circle dropdown-visible"></i>
-      <i a:if="indicator == VisibilityIndicator" class="fas fa-eye dropdown-visible"></i>
-      <i a:if="indicator == InvisibilityIndicator" class="fas fa-eye-slash dropdown-invisible"></i>
+			<i a:if="indicator == SelectionIndicator" class="fas fa-check-circle qs-dropdown-visible"></i>
+      <i a:if="indicator == VisibilityIndicator" class="fas fa-eye qs-dropdown-visible"></i>
+      <i a:if="indicator == InvisibilityIndicator" class="fas fa-eye-slash qs-dropdown-invisible"></i>
       <span a:assign="prop(textContent)=itemName" a:bindings="prop(textContent):caption"></span>
     </a>
   </li>
@@ -34,13 +34,13 @@
 	<a:handlers>
 		click()
 	</a:handlers>
-  <div class="pure-menu pure-menu-horizontal dropdown-container">
+  <div class="pure-menu pure-menu-horizontal qs-dropdown-container">
     <ul class="pure-menu-list">
-      <li class="pure-menu-item pure-menu-has-children dropdown-selector"
-					a:bindings="class(pure-menu-active):opened">
+      <li class="pure-menu-item pure-menu-has-children qs-dropdown-selector"
+					a:bindings="class(pure-menu-active):opened, self():rootItem">
         <a href="#" class="pure-menu-link"
 						a:capture="click:click() {preventDefault}"
-						a:bindings="class(pure-menu-disabled):Disabled, self():link, class(emph):emphCaption">
+						a:bindings="class(pure-menu-disabled):Disabled, class(qs-emph):emphCaption">
           <span a:bindings="prop(textContent):caption"></span>
           <i class="fas fa-caret-down"></i>
         </a>

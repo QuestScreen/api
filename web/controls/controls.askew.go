@@ -21,9 +21,9 @@ func init() {
   <!--controller-->
 	<!--data-->
 	<!--handlers-->
-  <div class="pure-menu pure-menu-horizontal dropdown-container">
+  <div class="pure-menu pure-menu-horizontal qs-dropdown-container">
     <ul class="pure-menu-list">
-      <li class="pure-menu-item pure-menu-has-children dropdown-selector">
+      <li class="pure-menu-item pure-menu-has-children qs-dropdown-selector">
         <a href="#" class="pure-menu-link">
           <span></span>
           <i class="fas fa-caret-down"></i>
@@ -44,8 +44,8 @@ type Dropdown struct {
 	// if nil, events that would be passed to the controller will not be handled.
 	Controller  DropdownController
 	opened      askew.BoolValue
+	rootItem    askew.RawValue
 	Disabled    askew.BoolValue
-	link        askew.RawValue
 	emphCaption askew.BoolValue
 	caption     askew.StringValue
 	menuHeight  askew.StringValue
@@ -70,9 +70,9 @@ func (o *Dropdown) askewInit(kind SelectorKind, indicator IndicatorKind) {
 	o.indicator = indicator
 
 	o.opened.BoundValue = askew.NewBoundClasses(&o.αcd, []string{"pure-menu-active"}, 7, 1, 1)
+	o.rootItem.BoundValue = askew.NewBoundSelf(&o.αcd, 7, 1, 1)
 	o.Disabled.BoundValue = askew.NewBoundClasses(&o.αcd, []string{"pure-menu-disabled"}, 7, 1, 1, 1)
-	o.link.BoundValue = askew.NewBoundSelf(&o.αcd, 7, 1, 1, 1)
-	o.emphCaption.BoundValue = askew.NewBoundClasses(&o.αcd, []string{"emph"}, 7, 1, 1, 1)
+	o.emphCaption.BoundValue = askew.NewBoundClasses(&o.αcd, []string{"qs-emph"}, 7, 1, 1, 1)
 	o.caption.BoundValue = askew.NewBoundProperty(&o.αcd, "textContent", 7, 1, 1, 1, 1)
 	o.menuHeight.BoundValue = askew.NewBoundStyle(&o.αcd, "height", 7, 1, 1, 3)
 	{
@@ -351,9 +351,9 @@ func init() {
   <!--controller-->
   <li class="pure-menu-item">
     <a href="#" class="pure-menu-link">
-			<i class="fas fa-check-circle dropdown-visible"></i>
-      <i class="fas fa-eye dropdown-visible"></i>
-      <i class="fas fa-eye-slash dropdown-invisible"></i>
+			<i class="fas fa-check-circle qs-dropdown-visible"></i>
+      <i class="fas fa-eye qs-dropdown-visible"></i>
+      <i class="fas fa-eye-slash qs-dropdown-invisible"></i>
       <span></span>
     </a>
   </li>
