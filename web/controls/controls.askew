@@ -1,11 +1,11 @@
 
 <a:component name="Switch" gen-new-init>
   <a:controller>Swapped()</a:controller>
-  <label class="switch">
+  <label class="qs-switch">
     <input type="checkbox"
 				a:bindings="prop(checked):(Value bool)"
 				a:capture="change:Swapped">
-    <span class="slider"></span>
+    <span class="qs-slider"></span>
   </label>
 </a:component>
 
@@ -60,29 +60,31 @@
 		confirm()
 		cancel()
 	</a:handlers>
-	<div id="popup-wrapper" a:bindings="style(display):Display, style(visibility):Visibility">
-		<form id="popup" class="pure-form" a:capture="submit:confirm() {preventDefault}">
+	<div id="qs-popup-wrapper" a:bindings="style(display):Display, style(visibility):Visibility">
+		<form id="qs-popup" class="pure-form" a:capture="submit:confirm() {preventDefault}">
 			<h3 a:bindings="prop(textContent):Title"></h3>
 			<section><a:embed name="Content" optional></a:embed></section>
-			<button type="button" class="pure-button"
-			    a:bindings="prop(textContent):CancelCaption, style(visibility):cancelVisible"
-					a:capture="click:cancel() {preventDefault}"></button>
-			<button type="submit" class="pure-button pure-button-primary"
-					a:bindings="prop(textContent):ConfirmCaption"></button>
+			<section>
+				<button type="button" class="pure-button"
+						a:bindings="prop(textContent):CancelCaption, style(visibility):cancelVisible"
+						a:capture="click:cancel() {preventDefault}"></button>
+				<button type="submit" class="pure-button pure-button-primary"
+						a:bindings="prop(textContent):ConfirmCaption"></button>
+			</section>
 		</form>
 	</div>
 </a:component>
 
 <a:component name="popupTemplateItem" gen-new-init>
-	<li class="pure-menu-item template-item">
+	<li class="pure-menu-item qs-template-item">
 		<a class="pure-menu-link" href="#">
-			<div class="template-container">
-				<p class="template-identifier">
+			<div class="qs-template-container">
+				<p class="qs-template-identifier">
 					<span a:bindings="prop(textContent):PluginName"></span>
 					<i class="fas fa-angle-right"></i>
 					<span a:bindings="prop(textContent):Name"></span>
 				</p>
-				<p class="template-descr" a:bindings="prop(textContent):Description"></p>
+				<p class="qs-template-descr" a:bindings="prop(textContent):Description"></p>
 			</div>
 			<i class="fas fa-sort"></i>
 		</a>
@@ -90,7 +92,7 @@
 </a:component>
 
 <a:component name="popupTemplateList" gen-new-init>
-	<div class="pure-menu template-list">
+	<div class="pure-menu qs-template-list">
 		<ul class="pure-menu-list"><a:embed name="popupTemplateItem" list></a:embed></ul>
 	</div>
 </a:component>

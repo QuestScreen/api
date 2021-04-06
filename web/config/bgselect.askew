@@ -11,7 +11,7 @@
 	<a:handlers>
 		edited()
 	</a:handlers>
-	<table class="config-item-table">
+	<table class="qs-config-item-table">
 		<thead>
 			<tr>
 				<th></th><th>Primary</th><th>Secondary</th>
@@ -40,7 +40,7 @@
 			</tr>
 		</tbody>
 	</table>
-	<div class="config-item-fragment">
+	<div class="qs-config-item-fragment">
 		<label for="texture">Texture</label>
 		<a:embed name="texture" type="controls.Dropdown" args="controls.SelectAtMostOne, controls.SelectionIndicator, ``" control></a:embed>
 	</div>

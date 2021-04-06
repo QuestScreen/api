@@ -134,12 +134,14 @@ func init() {
 	αPopupBaseTemplate.Set("innerHTML", `
 	<!--data-->
 	<!--handlers-->
-	<div id="popup-wrapper">
-		<form id="popup" class="pure-form">
+	<div id="qs-popup-wrapper">
+		<form id="qs-popup" class="pure-form">
 			<h3></h3>
 			<section><!--embed(Content)--></section>
-			<button type="button" class="pure-button"></button>
-			<button type="submit" class="pure-button pure-button-primary"></button>
+			<section>
+				<button type="button" class="pure-button"></button>
+				<button type="submit" class="pure-button pure-button-primary"></button>
+			</section>
 		</form>
 	</div>
 `)
@@ -185,9 +187,9 @@ func (o *PopupBase) askewInit() {
 	o.Display.BoundValue = askew.NewBoundStyle(&o.αcd, "display", 5)
 	o.Visibility.BoundValue = askew.NewBoundStyle(&o.αcd, "visibility", 5)
 	o.Title.BoundValue = askew.NewBoundProperty(&o.αcd, "textContent", 5, 1, 1)
-	o.CancelCaption.BoundValue = askew.NewBoundProperty(&o.αcd, "textContent", 5, 1, 5)
-	o.cancelVisible.BoundValue = askew.NewBoundStyle(&o.αcd, "visibility", 5, 1, 5)
-	o.ConfirmCaption.BoundValue = askew.NewBoundProperty(&o.αcd, "textContent", 5, 1, 7)
+	o.CancelCaption.BoundValue = askew.NewBoundProperty(&o.αcd, "textContent", 5, 1, 5, 1)
+	o.cancelVisible.BoundValue = askew.NewBoundStyle(&o.αcd, "visibility", 5, 1, 5, 1)
+	o.ConfirmCaption.BoundValue = askew.NewBoundProperty(&o.αcd, "textContent", 5, 1, 5, 3)
 	{
 		src := o.αcd.Walk(5, 1)
 		{
@@ -200,7 +202,7 @@ func (o *PopupBase) askewInit() {
 		}
 	}
 	{
-		src := o.αcd.Walk(5, 1, 5)
+		src := o.αcd.Walk(5, 1, 5, 1)
 		{
 			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
 				o.αcallcancel()
@@ -258,9 +260,9 @@ var αSwitchTemplate = js.Global().Get("document").Call("createElement", "templa
 func init() {
 	αSwitchTemplate.Set("innerHTML", `
   <!--controller-->
-  <label class="switch">
+  <label class="qs-switch">
     <input type="checkbox"/>
-    <span class="slider"></span>
+    <span class="qs-slider"></span>
   </label>
 `)
 }
@@ -555,15 +557,15 @@ var αpopupTemplateItemTemplate = js.Global().Get("document").Call("createElemen
 
 func init() {
 	αpopupTemplateItemTemplate.Set("innerHTML", `
-	<li class="pure-menu-item template-item">
+	<li class="pure-menu-item qs-template-item">
 		<a class="pure-menu-link" href="#">
-			<div class="template-container">
-				<p class="template-identifier">
+			<div class="qs-template-container">
+				<p class="qs-template-identifier">
 					<span></span>
 					<i class="fas fa-angle-right"></i>
 					<span></span>
 				</p>
-				<p class="template-descr"></p>
+				<p class="qs-template-descr"></p>
 			</div>
 			<i class="fas fa-sort"></i>
 		</a>
@@ -632,7 +634,7 @@ var αpopupTemplateListTemplate = js.Global().Get("document").Call("createElemen
 
 func init() {
 	αpopupTemplateListTemplate.Set("innerHTML", `
-	<div class="pure-menu template-list">
+	<div class="pure-menu qs-template-list">
 		<ul class="pure-menu-list"><!--embed(popupTemplateItem)--></ul>
 	</div>
 `)

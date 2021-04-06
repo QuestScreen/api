@@ -16,7 +16,7 @@ func init() {
 	αBackgroundSelectTemplate.Set("innerHTML", `
 	<!--data-->
 	<!--handlers-->
-	<table class="config-item-table">
+	<table class="qs-config-item-table">
 		<thead>
 			<tr>
 				<th></th><th>Primary</th><th>Secondary</th>
@@ -35,7 +35,7 @@ func init() {
 			</tr>
 		</tbody>
 	</table>
-	<div class="config-item-fragment">
+	<div class="qs-config-item-fragment">
 		<label for="texture">Texture</label>
 		<!--embed(texture)-->
 	</div>

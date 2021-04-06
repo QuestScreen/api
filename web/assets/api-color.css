@@ -1,5 +1,22 @@
+/* predefined color palette */
+
+:root {
+  --strong: #305f88;
+  --medium: #4ba3ed;
+  --medium-highlight: #2887cb;
+  --light: #8fccff;
+  --light-highlight: #afeeff;
+  --text: black;
+  --danger: rgb(212, 75, 90);
+  --caution: rgb(187, 187, 66);
+  --success: rgb(75, 212, 90);
+}
+
+/* dropdown */
+
 .qs-dropdown-selector > a:hover,
 .qs-dropdown-selector > a:active,
+.qs-dropdown-selector > a:focus,
 .qs-dropdown-selector.pure-menu-active > a,
 .qs-dropdown-selector > .pure-menu-children a:hover,
 .qs-dropdown-selector > .pure-menu-children a:active {
@@ -11,5 +28,32 @@
 }
 
 .qs-dropdown-selector .pure-menu-children {
+  background-color: var(--medium);
+}
+
+/* popup */
+
+#qs-popup {
+  background-color: var(--light);
+  box-shadow: 4px 8px 8px rgba(0, 0, 0, .5);
+}
+
+#qs-popup h3 {
+  background-color: var(--strong);
+}
+
+/* slider */
+
+input:checked + .qs-slider {
+  background-color: #2196F3;
+}
+
+input:focus + .qs-slider {
+  box-shadow: 0 0 .2em #2196F3;
+}
+
+/* config items */
+
+.qs-config-item-table {
   background-color: var(--medium);
 }

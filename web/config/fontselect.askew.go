@@ -15,15 +15,15 @@ func init() {
 	αFontSelectTemplate.Set("innerHTML", `
 	<!--data-->
 	<!--handlers-->
-	<div class="config-item-fragment">
+	<div class="qs-config-item-fragment">
 		<label for="font-family">Family</label>
-		<select name="font-family" class="font-families">
+		<select name="font-family" class="qs-font-families">
 			<option></option>
 		</select>
 	</div>
-	<div class="config-item-fragment">
+	<div class="qs-config-item-fragment">
 		<label for="font-size">Size</label>
-		<select name="font-size" class="font-size">
+		<select name="font-size" class="qs-font-size">
 			<option value="0">Small</option>
 			<option value="1">Content</option>
 			<option value="2">Medium</option>
@@ -32,14 +32,14 @@ func init() {
 			<option value="5">Huge</option>
 		</select>
 	</div>
-	<div class="config-item-fragment">
+	<div class="qs-config-item-fragment">
 		<label for="font-style">Style</label>
 		<div class="pure-button-group" role="group" aria-label="Font Faces" style="display: inline">
-			<button class="pure-button font-style-selector"><i class="fas fa-bold"></i></button>
-			<button class="pure-button font-style-selector"><i class="fas fa-italic"></i></button>
+			<button class="pure-button qs-font-style-selector"><i class="fas fa-bold"></i></button>
+			<button class="pure-button qs-font-style-selector"><i class="fas fa-italic"></i></button>
 		</div>
 	</div>
-	<div class="config-item-fragment">
+	<div class="qs-config-item-fragment">
 		<label for="font-color">Color</label>
 		<input type="color" name="font-color" required=""/>
 	</div>

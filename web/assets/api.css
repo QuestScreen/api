@@ -1,3 +1,5 @@
+/* dropdown */
+
 .qs-dropdown-container {
 	display: inline;
 }
@@ -36,4 +38,116 @@
   .qs-dropdown-container > .pure-menu-list {
     display: block;
   }
+}
+
+/* popup */
+
+#qs-popup-wrapper {
+	background-color: rgba(0, 0, 0, .5);
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: 0;
+	padding: 0;
+	display: none;
+  align-items: center;
+  justify-content: center;
+	z-index: 9;
+}
+
+#qs-popup {
+	border-radius: 5px;
+	padding: 0;
+	width: 30em;
+	text-align: right;
+}
+
+#qs-popup h3 {
+	text-align: center;
+	font-weight: bold;
+	margin-top: 0;
+  padding: .25em;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+	margin-bottom: .5em;
+}
+
+#qs-popup > section {
+	text-align: left;
+	display: block;
+  margin: 0;
+  padding: .5em;
+	min-height: 2em;
+}
+
+#qs-popup > section:last-child {
+  text-align: right;
+}
+
+/* switch taken from https://www.w3schools.com/howto/howto_css_switch.asp
+   and modified */
+
+.qs-switch {
+  position: relative;
+  display: inline-block !important;
+  width: 2.4em !important;
+  height: 1.4em; /* 34px */
+  /* revert stuff possibly imposed by .pure-control-group label */
+  margin: revert !important;
+  vertical-align: revert !important;
+  text-align: revert !important;
+}
+
+.qs-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.qs-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #e6e6e6;
+  -webkit-transition: .4s;
+  transition: .4s;
+  border-radius: .7em; /* 34px */
+}
+
+.qs-slider:before {
+  position: absolute;
+  content: "";
+  height: 1em;
+  width: 1em;
+  left: .2em;
+  bottom: .2em;
+  background-color: white;
+  -webkit-transition: .2s;
+  transition: .2s;
+  border-radius: 50%;
+}
+
+input:checked + .qs-slider:before {
+  -webkit-transform: translateX(1em);
+  -ms-transform: translateX(1em);
+  transform: translateX(1em);
+}
+
+/* config items */
+
+.qs-config-item-fragment {
+	display: inline-flex;
+	flex-direction: column;
+	padding: .5em;
+	vertical-align: top;
+}
+
+.qs-config-item-fragment > label {
+	padding: .5em 0;
+	margin: 0;
 }
