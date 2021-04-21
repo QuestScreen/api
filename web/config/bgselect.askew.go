@@ -82,7 +82,8 @@ func (o *BackgroundSelect) askewInit() {
 		src := o.αcd.Walk(5, 3, 1, 3, 0)
 		{
 			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
-				o.αcalledited()
+
+				o.edited()
 				return nil
 			})
 			src.Call("addEventListener", "input", wrapper)
@@ -92,7 +93,8 @@ func (o *BackgroundSelect) askewInit() {
 		src := o.αcd.Walk(5, 3, 1, 5, 0)
 		{
 			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
-				o.αcalledited()
+
+				o.edited()
 				return nil
 			})
 			src.Call("addEventListener", "input", wrapper)
@@ -102,7 +104,8 @@ func (o *BackgroundSelect) askewInit() {
 		src := o.αcd.Walk(5, 3, 3, 3, 0)
 		{
 			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
-				o.αcalledited()
+
+				o.edited()
 				return nil
 			})
 			src.Call("addEventListener", "input", wrapper)
@@ -112,7 +115,8 @@ func (o *BackgroundSelect) askewInit() {
 		src := o.αcd.Walk(5, 3, 3, 5, 0)
 		{
 			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
-				o.αcalledited()
+
+				o.edited()
 				return nil
 			})
 			src.Call("addEventListener", "input", wrapper)
@@ -145,10 +149,6 @@ func (o *BackgroundSelect) Extract() {
 func (o *BackgroundSelect) Destroy() {
 	o.texture.Destroy()
 	o.αcd.DoDestroy()
-}
-
-func (o *BackgroundSelect) αcalledited() {
-	o.edited()
 }
 
 // BackgroundSelectList is a list of BackgroundSelect whose manipulation methods auto-update

@@ -96,14 +96,14 @@ func (o *FontSelect) askewInit(families []string) {
 				block := _orig.Call("cloneNode", true)
 
 				{
-					var tmp askew.BoundProperty
-					tmp.Init(askew.WalkPath(block), "value")
-					askew.Assign(&tmp, index)
+					tmp := askew.BoundPropertyAt(
+						askew.WalkPath(block), "value")
+					askew.Assign(tmp, index)
 				}
 				{
-					var tmp askew.BoundProperty
-					tmp.Init(askew.WalkPath(block), "textContent")
-					askew.Assign(&tmp, name)
+					tmp := askew.BoundPropertyAt(
+						askew.WalkPath(block), "textContent")
+					askew.Assign(tmp, name)
 				}
 				_parent.Call("insertBefore", block, _next)
 			}
@@ -113,7 +113,8 @@ func (o *FontSelect) askewInit(families []string) {
 		src := o.αcd.Walk(5, 3)
 		{
 			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
-				o.αcalledited()
+
+				o.edited()
 				return nil
 			})
 			src.Call("addEventListener", "input", wrapper)
@@ -123,7 +124,8 @@ func (o *FontSelect) askewInit(families []string) {
 		src := o.αcd.Walk(7, 3)
 		{
 			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
-				o.αcalledited()
+
+				o.edited()
 				return nil
 			})
 			src.Call("addEventListener", "input", wrapper)
@@ -133,7 +135,8 @@ func (o *FontSelect) askewInit(families []string) {
 		src := o.αcd.Walk(9, 3, 1)
 		{
 			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
-				o.αcalltoggleBold()
+
+				o.toggleBold()
 				arguments[0].Call("preventDefault")
 				return nil
 			})
@@ -144,7 +147,8 @@ func (o *FontSelect) askewInit(families []string) {
 		src := o.αcd.Walk(9, 3, 3)
 		{
 			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
-				o.αcalltoggleItalic()
+
+				o.toggleItalic()
 				arguments[0].Call("preventDefault")
 				return nil
 			})
@@ -155,7 +159,8 @@ func (o *FontSelect) askewInit(families []string) {
 		src := o.αcd.Walk(11, 3)
 		{
 			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
-				o.αcalledited()
+
+				o.edited()
 				return nil
 			})
 			src.Call("addEventListener", "input", wrapper)
@@ -181,16 +186,6 @@ func (o *FontSelect) Extract() {
 // currently inserted anywhere, it gets removed before.
 func (o *FontSelect) Destroy() {
 	o.αcd.DoDestroy()
-}
-
-func (o *FontSelect) αcalledited() {
-	o.edited()
-}
-func (o *FontSelect) αcalltoggleBold() {
-	o.toggleBold()
-}
-func (o *FontSelect) αcalltoggleItalic() {
-	o.toggleItalic()
 }
 
 // FontSelectList is a list of FontSelect whose manipulation methods auto-update

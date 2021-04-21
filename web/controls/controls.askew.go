@@ -79,7 +79,8 @@ func (o *Dropdown) askewInit(kind SelectorKind, indicator IndicatorKind) {
 		src := o.αcd.Walk(7, 1, 1, 1)
 		{
 			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
-				o.αcallclick()
+
+				o.click()
 				arguments[0].Call("preventDefault")
 				return nil
 			})
@@ -115,17 +116,6 @@ func (o *Dropdown) Extract() {
 func (o *Dropdown) Destroy() {
 	o.items.DestroyAll()
 	o.αcd.DoDestroy()
-}
-
-func (o *Dropdown) αcallclick() {
-	o.click()
-}
-func (o *Dropdown) αcallItemClicked(index askew.BoundValue) bool {
-	if o.Controller == nil {
-		return false
-	}
-	_index := askew.IntValue{BoundValue: index}
-	return o.Controller.ItemClicked(_index.Get())
 }
 
 var αPopupBaseTemplate = js.Global().Get("document").Call("createElement", "template")
@@ -194,7 +184,8 @@ func (o *PopupBase) askewInit() {
 		src := o.αcd.Walk(5, 1)
 		{
 			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
-				o.αcallconfirm()
+
+				o.confirm()
 				arguments[0].Call("preventDefault")
 				return nil
 			})
@@ -205,7 +196,8 @@ func (o *PopupBase) askewInit() {
 		src := o.αcd.Walk(5, 1, 5, 1)
 		{
 			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
-				o.αcallcancel()
+
+				o.cancel()
 				arguments[0].Call("preventDefault")
 				return nil
 			})
@@ -240,13 +232,6 @@ func (o *PopupBase) Extract() {
 func (o *PopupBase) Destroy() {
 	o.Content.Set(nil)
 	o.αcd.DoDestroy()
-}
-
-func (o *PopupBase) αcallcancel() {
-	o.cancel()
-}
-func (o *PopupBase) αcallconfirm() {
-	o.confirm()
 }
 
 // SwitchController can be implemented to handle external events
@@ -305,7 +290,8 @@ func (o *Switch) askewInit() {
 		src := o.αcd.Walk(3, 1)
 		{
 			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
-				o.αcallSwapped()
+
+				o.Controller.Swapped()
 				return nil
 			})
 			src.Call("addEventListener", "change", wrapper)
@@ -331,13 +317,6 @@ func (o *Switch) Extract() {
 // currently inserted anywhere, it gets removed before.
 func (o *Switch) Destroy() {
 	o.αcd.DoDestroy()
-}
-
-func (o *Switch) αcallSwapped() {
-	if o.Controller == nil {
-		return
-	}
-	o.Controller.Swapped()
 }
 
 // dropdownItemController can be implemented to handle external events
@@ -401,19 +380,19 @@ func (o *dropdownItem) askewInit(indicator IndicatorKind, emph bool, itemName st
 	{
 		block := o.αcd.Walk()
 		{
-			var tmp askew.BoundDataset
-			tmp.Init(askew.WalkPath(block, 3, 1), "index")
-			askew.Assign(&tmp, itemIndex)
+			tmp := askew.BoundDatasetAt(
+				askew.WalkPath(block, 3, 1), "index")
+			askew.Assign(tmp, itemIndex)
 		}
 		{
-			var tmp askew.BoundClasses
-			tmp.Init(askew.WalkPath(block, 3, 1), []string{"emph"})
-			askew.Assign(&tmp, emph)
+			tmp := askew.BoundClassesAt(
+				askew.WalkPath(block, 3, 1), []string{"emph"})
+			askew.Assign(tmp, emph)
 		}
 		{
-			var tmp askew.BoundProperty
-			tmp.Init(askew.WalkPath(block, 3, 1, 7), "textContent")
-			askew.Assign(&tmp, itemName)
+			tmp := askew.BoundPropertyAt(
+				askew.WalkPath(block, 3, 1, 7), "textContent")
+			askew.Assign(tmp, itemName)
 		}
 		if indicator == InvisibilityIndicator {
 
@@ -442,9 +421,8 @@ func (o *dropdownItem) askewInit(indicator IndicatorKind, emph bool, itemName st
 		{
 			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
 				self := arguments[0].Get("currentTarget")
-				var pindex askew.BoundDataset
-				pindex.Init(self, "index")
-				o.αcallclickItem(&pindex)
+
+				o.Controller.clickItem((&askew.IntValue{BoundValue: askew.BoundDatasetAt(self, "index")}).Get())
 				arguments[0].Call("preventDefault")
 				return nil
 			})
@@ -471,14 +449,6 @@ func (o *dropdownItem) Extract() {
 // currently inserted anywhere, it gets removed before.
 func (o *dropdownItem) Destroy() {
 	o.αcd.DoDestroy()
-}
-
-func (o *dropdownItem) αcallclickItem(index askew.BoundValue) {
-	if o.Controller == nil {
-		return
-	}
-	_index := askew.IntValue{BoundValue: index}
-	o.Controller.clickItem(_index.Get())
 }
 
 var αpopupInputTemplate = js.Global().Get("document").Call("createElement", "template")
@@ -526,9 +496,9 @@ func (o *popupInput) askewInit(label string, cb func(input string)) {
 	{
 		block := o.αcd.Walk()
 		{
-			var tmp askew.BoundProperty
-			tmp.Init(askew.WalkPath(block, 1), "textContent")
-			askew.Assign(&tmp, label)
+			tmp := askew.BoundPropertyAt(
+				askew.WalkPath(block, 1), "textContent")
+			askew.Assign(tmp, label)
 		}
 	}
 }
@@ -742,9 +712,9 @@ func (o *popupText) askewInit(caption string, cb func()) {
 	{
 		block := o.αcd.Walk()
 		{
-			var tmp askew.BoundSelf
-			tmp.Init(askew.WalkPath(block, 1))
-			askew.Assign(&tmp, caption)
+			tmp := askew.BoundSelfAt(
+				askew.WalkPath(block, 1))
+			askew.Assign(tmp, caption)
 		}
 	}
 }
