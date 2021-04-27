@@ -80,7 +80,7 @@ func (o *Dropdown) askewInit(kind SelectorKind, indicator IndicatorKind) {
 		{
 			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
 
-				o.click()
+				go o.click()
 				arguments[0].Call("preventDefault")
 				return nil
 			})
@@ -185,7 +185,7 @@ func (o *PopupBase) askewInit() {
 		{
 			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
 
-				o.confirm()
+				go o.confirm()
 				arguments[0].Call("preventDefault")
 				return nil
 			})
@@ -197,7 +197,7 @@ func (o *PopupBase) askewInit() {
 		{
 			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
 
-				o.cancel()
+				go o.cancel()
 				arguments[0].Call("preventDefault")
 				return nil
 			})
@@ -291,7 +291,7 @@ func (o *Switch) askewInit() {
 		{
 			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
 
-				o.Controller.Swapped()
+				go o.Controller.Swapped()
 				return nil
 			})
 			src.Call("addEventListener", "change", wrapper)
@@ -422,7 +422,7 @@ func (o *dropdownItem) askewInit(indicator IndicatorKind, emph bool, itemName st
 			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
 				self := arguments[0].Get("currentTarget")
 
-				o.Controller.clickItem((&askew.IntValue{BoundValue: askew.BoundDatasetAt(self, "index")}).Get())
+				go o.Controller.clickItem((&askew.IntValue{BoundValue: askew.BoundDatasetAt(self, "index")}).Get())
 				arguments[0].Call("preventDefault")
 				return nil
 			})

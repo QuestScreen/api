@@ -114,7 +114,7 @@ func (o *FontSelect) askewInit(families []string) {
 		{
 			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
 
-				o.edited()
+				go o.edited()
 				return nil
 			})
 			src.Call("addEventListener", "input", wrapper)
@@ -125,7 +125,7 @@ func (o *FontSelect) askewInit(families []string) {
 		{
 			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
 
-				o.edited()
+				go o.edited()
 				return nil
 			})
 			src.Call("addEventListener", "input", wrapper)
@@ -136,7 +136,7 @@ func (o *FontSelect) askewInit(families []string) {
 		{
 			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
 
-				o.toggleBold()
+				go o.toggleBold()
 				arguments[0].Call("preventDefault")
 				return nil
 			})
@@ -148,7 +148,7 @@ func (o *FontSelect) askewInit(families []string) {
 		{
 			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
 
-				o.toggleItalic()
+				go o.toggleItalic()
 				arguments[0].Call("preventDefault")
 				return nil
 			})
@@ -160,7 +160,7 @@ func (o *FontSelect) askewInit(families []string) {
 		{
 			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
 
-				o.edited()
+				go o.edited()
 				return nil
 			})
 			src.Call("addEventListener", "input", wrapper)

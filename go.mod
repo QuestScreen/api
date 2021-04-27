@@ -3,7 +3,7 @@ module github.com/QuestScreen/api
 go 1.12
 
 require (
-	github.com/flyx/askew v0.0.0-20210417174532-4f90ab8b59ff
+	github.com/flyx/askew v0.0.0-20210425164734-1ad2e81a1314
 	github.com/kr/pretty v0.1.0 // indirect
 	golang.org/x/mod v0.4.2 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect

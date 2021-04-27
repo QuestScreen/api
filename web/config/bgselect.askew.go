@@ -83,7 +83,7 @@ func (o *BackgroundSelect) askewInit() {
 		{
 			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
 
-				o.edited()
+				go o.edited()
 				return nil
 			})
 			src.Call("addEventListener", "input", wrapper)
@@ -94,7 +94,7 @@ func (o *BackgroundSelect) askewInit() {
 		{
 			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
 
-				o.edited()
+				go o.edited()
 				return nil
 			})
 			src.Call("addEventListener", "input", wrapper)
@@ -105,7 +105,7 @@ func (o *BackgroundSelect) askewInit() {
 		{
 			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
 
-				o.edited()
+				go o.edited()
 				return nil
 			})
 			src.Call("addEventListener", "input", wrapper)
@@ -116,7 +116,7 @@ func (o *BackgroundSelect) askewInit() {
 		{
 			wrapper := js.FuncOf(func(this js.Value, arguments []js.Value) interface{} {
 
-				o.edited()
+				go o.edited()
 				return nil
 			})
 			src.Call("addEventListener", "input", wrapper)

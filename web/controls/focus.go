@@ -1,6 +1,10 @@
 package controls
 
-import "syscall/js"
+import (
+	"syscall/js"
+
+	"github.com/QuestScreen/api/web"
+)
 
 // FocusHolder is a UI component that needs to react when the focus leaves its
 // root element.
@@ -16,8 +20,7 @@ var curHolder FocusHolder
 
 func SetFocusHolder(holder FocusHolder) {
 	if curHolder != nil && holder != nil {
-		js.Global().Get("console").Call(
-			"log", "[warn] SetHolder called when curHolder was not nil")
+		web.Log(web.LogWarn, "SetHolder called when curHolder was not nil")
 	}
 	curHolder = holder
 }
